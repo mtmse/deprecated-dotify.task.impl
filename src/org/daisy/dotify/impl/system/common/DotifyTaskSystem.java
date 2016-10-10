@@ -11,10 +11,12 @@ import java.util.Set;
 import java.util.logging.Logger;
 
 import org.daisy.dotify.api.engine.FormatterEngineFactoryService;
-import org.daisy.dotify.api.tasks.InternalTask;
+import org.daisy.dotify.api.tasks.CompiledTaskSystem;
+import org.daisy.dotify.api.tasks.DefaultCompiledTaskSystem;
 import org.daisy.dotify.api.tasks.TaskGroup;
 import org.daisy.dotify.api.tasks.TaskGroupFactoryMakerService;
 import org.daisy.dotify.api.tasks.TaskGroupSpecification;
+import org.daisy.dotify.api.tasks.TaskGroupSpecification.Type;
 import org.daisy.dotify.api.tasks.TaskOption;
 import org.daisy.dotify.api.tasks.TaskSystem;
 import org.daisy.dotify.api.tasks.TaskSystemException;
@@ -41,8 +43,6 @@ public class DotifyTaskSystem implements TaskSystem {
 	private final String context;
 	private final String name;
 	private final TaskGroupFactoryMakerService imf;
-	private final PagedMediaWriterFactoryMakerService pmw;
-	private final FormatterEngineFactoryService fe;
 	
 	public DotifyTaskSystem(String name, String outputFormat, String context,
 			TaskGroupFactoryMakerService imf, PagedMediaWriterFactoryMakerService pmw, FormatterEngineFactoryService fe) {
@@ -50,17 +50,15 @@ public class DotifyTaskSystem implements TaskSystem {
 		this.outputFormat = outputFormat;
 		this.name = name;
 		this.imf = imf;
-		this.pmw = pmw;
-		this.fe = fe;
 	}
 	
 	@Override
 	public String getName() {
 		return name;
 	}
-
+	
 	@Override
-	public List<InternalTask> compile(Map<String, Object> pa) throws TaskSystemException {
+	public CompiledTaskSystem compile(Map<String, Object> pa) throws TaskSystemException {
 		RunParameters p = RunParameters.fromMap(pa);
 		HashMap<String, Object> h = new HashMap<>();
 		for (Object key : p.getKeys()) {
@@ -69,14 +67,30 @@ public class DotifyTaskSystem implements TaskSystem {
 			}
 		}
 		
-		List<InternalTask> setup = new ArrayList<>();
+		DefaultCompiledTaskSystem setup = new DefaultCompiledTaskSystem(name, getOptions());
 		String inputFormat = h.get(Keys.INPUT_FORMAT).toString();
 
 		logger.info("Finding path...");
-		for (TaskGroup g : getPath(imf, new TaskGroupSpecification(inputFormat, outputFormat, context), pa)) {
-			setup.addAll(g.compile(h));
+		for (TaskGroupSpecification spec : getPath(imf, new TaskGroupSpecification(inputFormat, outputFormat, context), pa)) {
+			TaskGroup g = imf.newTaskGroup(spec);
+			if (spec.getType()==Type.ENHANCE) {
+				// For enhance, only include the options required to enable the task group. Once enabled,
+				// additional options may be presented
+				for (TaskOption o : spec.getRequiredOptions()) {
+					setup.addOption(o);
+				}
+			}
+			if (spec.getType()==Type.CONVERT || matchesRequiredOptions(spec, pa, false)) {
+				//TODO: these options should be on the group level instead of on the system level
+				List<TaskOption> opts = g.getOptions();
+				if (opts!=null) {
+					for (TaskOption o : opts) {
+						setup.addOption(o);
+					}
+				}
+				setup.addAll(g.compile(h));				
+			}
 		}
-
 		return setup;
 	}
 
@@ -93,16 +107,11 @@ public class DotifyTaskSystem implements TaskSystem {
 	 * @param parameters the parameters
 	 * @return returns a list of task groups
 	 */
-	static List<TaskGroup> getPath(TaskGroupFactoryMakerService imf, TaskGroupSpecification def, Map<String, Object> parameters) {
+	static List<TaskGroupSpecification> getPath(TaskGroupFactoryMakerService imf, TaskGroupSpecification def, Map<String, Object> parameters) {
 		Set<TaskGroupSpecification> specs = imf.listSupportedSpecifications();
 		Map<String, List<TaskGroupSpecification>> byInput = byInput(specs);
 
-		List<TaskGroup> path = new ArrayList<>();
-		List<TaskGroupSpecification> selected = getPathSpecifications(def.getInputFormat(), def.getOutputFormat(), def.getLocale(), parameters, byInput, 0);
-		for (TaskGroupSpecification spec : selected) {
-			path.add(imf.newTaskGroup(spec));
-		}
-		return path;
+		return getPathSpecifications(def.getInputFormat(), def.getOutputFormat(), def.getLocale(), parameters, byInput, 0);
 	}
 	
 	static List<TaskGroupSpecification> getPathSpecifications(String input, String output, String locale, Map<String, Object> parameters, Map<String, List<TaskGroupSpecification>> inputs, int i) {
@@ -113,7 +122,7 @@ public class DotifyTaskSystem implements TaskSystem {
 			if (candidate.getOutputFormat().equals(output)) {
 				logger.info("Evaluating " + input + " -> " + candidate.getOutputFormat() + " (D:"+i+")");
 				List<TaskGroupSpecification> path = new ArrayList<>();
-				path.addAll(getEnhance(candidates, parameters));
+				path.addAll(candidates.getEnhance());
 				path.add(candidate);
 				return path;
 			} else {
@@ -121,7 +130,7 @@ public class DotifyTaskSystem implements TaskSystem {
 				List<TaskGroupSpecification> path2 = getPathSpecifications(candidate.getOutputFormat(), output, locale, parameters, byInput, i+1);
 				if (!path2.isEmpty()) {
 					List<TaskGroupSpecification> path = new ArrayList<>();
-					path.addAll(getEnhance(candidates, parameters));
+					path.addAll(candidates.getEnhance());
 					path.add(candidate);
 					path.addAll(path2);
 					return path;
@@ -131,29 +140,19 @@ public class DotifyTaskSystem implements TaskSystem {
 		return Collections.emptyList();
 	}
 	
-	private static List<TaskGroupSpecification> getEnhance(TaskGroupSpecificationFilter candidates, Map<String, Object> parameters) {
-		List<TaskGroupSpecification> ret = new ArrayList<>();
-		for (TaskGroupSpecification candidate : candidates.getEnhance()) {
-			if (matchesRequiredOptions(candidate, parameters, false)) {
-				ret.add(candidate);
-			}
-		}
-		return ret;
-	}
-	
 	static boolean matchesRequiredOptions(TaskGroupSpecification candidate, Map<String, Object> parameters, boolean emptyReturn) {
-		if (candidate.requiresKeys().isEmpty() && candidate.requiresKeyValue().isEmpty()) {
+		if (candidate.getRequiredOptions().isEmpty()) {
 			return emptyReturn;
 		}
-		for (String key : candidate.requiresKeys()) {
+		for (TaskOption option : candidate.getRequiredOptions()) {
+			String key = option.getKey();
 			if (!parameters.containsKey(key)) {
 				return false;
-			}
-		}
-		for (Entry<String, String> entry : candidate.requiresKeyValue().entrySet()) {
-			Object value = parameters.get(entry.getKey());
-			if (value==null || !value.equals(entry.getValue())) {
-				return false;
+			} else {
+				Object value = parameters.get(key);
+				if (!option.acceptsValue(value.toString())) {
+					return false;
+				}
 			}
 		}
 		return true;
@@ -180,5 +179,4 @@ public class DotifyTaskSystem implements TaskSystem {
 			}
 		}
 	}
-
 }
