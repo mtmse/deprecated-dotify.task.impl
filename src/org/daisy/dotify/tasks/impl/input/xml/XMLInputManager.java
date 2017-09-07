@@ -14,8 +14,11 @@ import java.util.logging.Logger;
 
 import org.daisy.dotify.common.io.ResourceLocator;
 import org.daisy.dotify.common.io.ResourceLocatorException;
+import org.daisy.dotify.tasks.impl.FeatureSwitch;
 import org.daisy.dotify.tasks.impl.input.DuplicatorTask;
+import org.daisy.dotify.tasks.tools.XsltTask;
 import org.daisy.streamline.api.option.UserOption;
+import org.daisy.streamline.api.option.UserOptionValue;
 import org.daisy.streamline.api.tasks.InternalTask;
 import org.daisy.streamline.api.tasks.TaskGroup;
 import org.daisy.streamline.api.tasks.TaskSystemException;
@@ -54,6 +57,7 @@ public class XMLInputManager implements TaskGroup {
 	 */
 	static final String OBFL_OUTPUT_LOCATION = "obfl-output-location";
 	private static final String TEMPLATE_KEY = "template";
+	static final String PROCESS_EDITING_INSTRUCTIONS = "process-editing-instructions";
 	private static final String LOCALIZATION_PROPS = "localization.xml";
 	private final ResourceLocator localLocator;
 	private final ResourceLocator commonLocator;
@@ -99,7 +103,13 @@ public class XMLInputManager implements TaskGroup {
 		}
 		
 		List<InternalTask> ret = new ArrayList<>();
-		ret.add(new XMLExpandingTask(template, makeXSLTParams(parameters), localLocator, commonLocator));
+		Map<String, Object> params = makeXSLTParams(parameters);
+
+		if ("true".equalsIgnoreCase(parameters.getOrDefault(PROCESS_EDITING_INSTRUCTIONS, "false").toString())) {
+			ret.add(new XsltTask("Editing instructions processor", this.getClass().getResource("resource-files/editing-instructions.xsl"), params));
+		}
+
+		ret.add(new XMLExpandingTask(template, params, localLocator, commonLocator));
 
 		String keep = (String)parameters.get(OBFL_OUTPUT_LOCATION);
 		if (keep!=null && !"".equals(keep)) {
@@ -137,6 +147,14 @@ public class XMLInputManager implements TaskGroup {
 	public List<UserOption> getOptions() {
 		List<UserOption> ret = new ArrayList<>();
 		ret.add(new UserOption.Builder(OBFL_OUTPUT_LOCATION).description("Path to store intermediary OBFL-file.").build());
+		if (FeatureSwitch.ENABLE_EDITING_INSTRUCTIONS.isOn()) {
+			ret.add(new UserOption.Builder(PROCESS_EDITING_INSTRUCTIONS)
+					.description("Process editing instructions")
+					.addValue(new UserOptionValue.Builder("true").build())
+					.addValue(new UserOptionValue.Builder("false").build())
+					.defaultValue("false")
+					.build());
+		}
 		return ret;
 	}
 
