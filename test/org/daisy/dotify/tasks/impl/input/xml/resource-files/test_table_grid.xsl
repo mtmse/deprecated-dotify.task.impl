@@ -6,7 +6,7 @@
 	exclude-result-prefixes="dtb xs">
 
 	<!-- Note: This import will only work in the test setup. -->
-	<xsl:import href="../../../../../../../../../src/org/daisy/dotify/tasks/impl/input/xml/resource-files/common/xslt-files/dtbook_table_grid.xsl"/>
+	<xsl:import href="../../../../../../../../../main/org/daisy/dotify/tasks/impl/input/xml/resource-files/common/xslt-files/dtbook_table_grid.xsl"/>
 	<xsl:param name="table-split-columns" select="10"/>
 	
 	<xsl:output method="xml" encoding="utf-8" indent="no"/>

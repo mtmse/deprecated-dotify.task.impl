@@ -12,7 +12,6 @@ Private-Package: \
 	org.daisy.dotify.tasks.impl.input.epub,\
 	org.daisy.dotify.tasks.impl.input.text,\
 	org.daisy.dotify.tasks.impl.input.xml,\
-	org.daisy.dotify.tasks.impl.system.common,\
 	org.daisy.dotify.tasks.impl.validity
 -sources: true
 Service-Component: *

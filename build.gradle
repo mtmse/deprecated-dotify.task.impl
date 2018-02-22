@@ -38,13 +38,6 @@ repositories {
 	//maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
 }
 
-// Due to problems with relative links in the test xslt wrapper Eclipse and Gradle
-// need to agree on the name of the src folder (which means changing it in build)
-sourceSets.main {
-	output.classesDir = "${project.buildDir}/classes/src"
-	output.resourcesDir = "${project.buildDir}/resources/src"
-}
-
 dependencies {
 	compileOnly group: "biz.aQute.bnd", name: "annotation", version: "2.3.0"
 	compile 'org.daisy.dotify:dotify.api:4.0.0'
