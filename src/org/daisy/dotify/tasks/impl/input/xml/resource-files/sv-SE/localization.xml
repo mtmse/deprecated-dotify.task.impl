@@ -29,6 +29,8 @@
 	<entry key="l10nEndnotesPageHeader">Noter</entry>
 	
 	<entry key="l10nSequenceInterruptedMsg">Fortsättning i nästa volym.</entry>
+	
+	<entry key="l10nInstructionsHeading">Till punktskriftsläsaren</entry>
 
 	<!--  (concat &quot;Volym &quot; (round $started-volume-number)) -->
 	<!--  (concat &quot;Innehåll volym &quot; (round $volume)) -->

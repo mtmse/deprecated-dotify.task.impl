@@ -99,6 +99,21 @@
 			<xsl:if test="$rear-cover-placement='begin'">
 				<xsl:call-template name="insertBackCoverTextAndRearJacketCopy"/>
 			</xsl:if>
+			<xsl:if test="//processing-instruction('dotify-insert-instructions-page')">
+				<sequence master="plain">
+					<block padding-top="{if ($row-spacing=2) then 2 else 3}" margin-bottom="1"><xsl:value-of select="$l10nInstructionsHeading"/></block>
+					<xsl:for-each select="tokenize(string-join(//processing-instruction('dotify-insert-instructions-page'), ' '), '\n')">
+						<block>
+							<xsl:choose>
+								<xsl:when test="position()=1"><!-- No attribute --></xsl:when>
+								<xsl:when test="$default-paragraph-separator='empty-line'"><xsl:attribute name="margin-top">1</xsl:attribute></xsl:when>
+								<xsl:otherwise><xsl:attribute name="first-line-indent">2</xsl:attribute></xsl:otherwise>
+							</xsl:choose>
+							<xsl:value-of select="normalize-space(.)"></xsl:value-of>
+						</block>
+					</xsl:for-each>
+				</sequence>
+			</xsl:if>
 		</xsl:variable>
 		<xsl:variable name="additionalPreContent"><xsl:if test="$insertToc"><xsl:apply-templates select="//dtb:frontmatter" mode="pre-volume-mode"/></xsl:if></xsl:variable>
 		<xsl:copy-of select="obfl:insertVolumeTemplate(

@@ -41,6 +41,7 @@
 	<xsl:param name="l10nrearjacketcopy" select="'Rear jacket copy'"/>
 	<xsl:param name="l10ncolophon" select="'Colophon'"/>
 	<xsl:param name="l10nSequenceInterruptedMsg" select="'Continues in the next volume'"/>
+	<xsl:param name="l10nInstructionsHeading" select="'To the reader'"/>
 
 	<xsl:function name="obfl:insertLayoutMaster">
 		<xsl:param name="footnotesInFrontMatter" as="xs:integer"/> 
