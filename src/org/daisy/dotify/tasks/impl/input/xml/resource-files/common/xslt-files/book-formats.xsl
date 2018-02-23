@@ -268,7 +268,7 @@
 						<xsl:copy-of select="$firstInFirstVolumeContent"/>
 						<toc-sequence master="front" toc="full-toc" range="document" initial-page-number="1">
 							<on-toc-start>
-								<block padding-bottom="1"><xsl:value-of select="$l10nTocHeadline"/></block>
+								<block padding-top="{if ($row-spacing=2) then 2 else 3}" padding-bottom="1"><xsl:value-of select="$l10nTocHeadline"/></block>
 								<xsl:if test="$show-toc-preamble and $l10nTocDescription!=''">
 									<block padding-bottom="1"><xsl:value-of select="$l10nTocDescription"/></block>
 								</xsl:if>
