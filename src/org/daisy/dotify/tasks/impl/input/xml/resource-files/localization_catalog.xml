@@ -5,8 +5,11 @@
 		Localization entry point. Maps a locale to a folder root relative to the location of this package.
 	</comment>
 
+	<entry key="sv">resource-files/sv-SE</entry>
 	<entry key="sv-SE">resource-files/sv-SE</entry>
+	<entry key="en">resource-files/en-US</entry>
 	<entry key="en-US">resource-files/en-US</entry>
+	<entry key="no">resource-files/no-NO</entry>
 	<entry key="no-NO">resource-files/no-NO</entry>
 	<entry key="de">resource-files/de-DE</entry>
 	<entry key="de-DE">resource-files/de-DE</entry>
