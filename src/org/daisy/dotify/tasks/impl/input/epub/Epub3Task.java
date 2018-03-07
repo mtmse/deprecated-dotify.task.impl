@@ -10,9 +10,9 @@ import java.util.logging.Logger;
 import org.daisy.dotify.common.io.FileIO;
 import org.daisy.streamline.api.media.AnnotatedFile;
 import org.daisy.streamline.api.media.DefaultAnnotatedFile;
+import org.daisy.streamline.api.option.UserOption;
 import org.daisy.streamline.api.tasks.InternalTaskException;
 import org.daisy.streamline.api.tasks.ReadWriteTask;
-import org.daisy.streamline.api.option.UserOption;
 
 /**
  * Provides an epub to html task.

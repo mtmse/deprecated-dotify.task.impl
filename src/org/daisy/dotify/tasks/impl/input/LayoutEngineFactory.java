@@ -12,9 +12,9 @@ import org.daisy.streamline.api.tasks.TaskGroup;
 import org.daisy.streamline.api.tasks.TaskGroupFactory;
 import org.daisy.streamline.api.tasks.TaskGroupInformation;
 import org.daisy.streamline.api.tasks.TaskGroupSpecification;
-
-import aQute.bnd.annotation.component.Component;
-import aQute.bnd.annotation.component.Reference;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferenceCardinality;
 
 /**
  * Provides a task group factory for running the Dotify formatter.
@@ -76,7 +76,7 @@ public class LayoutEngineFactory implements TaskGroupFactory {
 	 * Sets a factory dependency.
 	 * @param service the dependency
 	 */
-	@Reference
+	@Reference(cardinality=ReferenceCardinality.MANDATORY)
 	public void setPagedMediaWriterFactory(PagedMediaWriterFactoryMakerService service) {
 		this.pmw = service;
 	}
@@ -93,7 +93,7 @@ public class LayoutEngineFactory implements TaskGroupFactory {
 	 * Sets a factory dependency.
 	 * @param service the dependency
 	 */
-	@Reference
+	@Reference(cardinality=ReferenceCardinality.MANDATORY)
 	public void setFormatterEngineFactory(FormatterEngineFactoryService service) {
 		this.fe = service;
 	}

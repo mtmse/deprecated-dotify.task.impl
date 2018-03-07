@@ -30,11 +30,11 @@ import org.daisy.dotify.api.writer.PagedMediaWriterFactoryMakerService;
 import org.daisy.dotify.tasks.impl.input.ObflResourceLocator.ObflResourceIdentifier;
 import org.daisy.streamline.api.media.AnnotatedFile;
 import org.daisy.streamline.api.media.DefaultAnnotatedFile;
+import org.daisy.streamline.api.option.UserOption;
+import org.daisy.streamline.api.option.UserOptionValue;
 import org.daisy.streamline.api.tasks.InternalTaskException;
 import org.daisy.streamline.api.tasks.ReadWriteTask;
 import org.daisy.streamline.api.tasks.TaskGroupSpecification;
-import org.daisy.streamline.api.option.UserOption;
-import org.daisy.streamline.api.option.UserOptionValue;
 import org.daisy.streamline.api.tasks.TaskSystemException;
 
 /**

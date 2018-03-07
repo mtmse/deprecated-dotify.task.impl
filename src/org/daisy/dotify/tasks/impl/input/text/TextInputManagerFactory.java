@@ -9,8 +9,7 @@ import org.daisy.streamline.api.tasks.TaskGroup;
 import org.daisy.streamline.api.tasks.TaskGroupFactory;
 import org.daisy.streamline.api.tasks.TaskGroupInformation;
 import org.daisy.streamline.api.tasks.TaskGroupSpecification;
-
-import aQute.bnd.annotation.component.Component;
+import org.osgi.service.component.annotations.Component;
 
 /**
  * Provides a task group factory for text input.

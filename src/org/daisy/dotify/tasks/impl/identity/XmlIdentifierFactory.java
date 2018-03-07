@@ -3,8 +3,7 @@ package org.daisy.dotify.tasks.impl.identity;
 import org.daisy.streamline.api.identity.Identifier;
 import org.daisy.streamline.api.identity.IdentifierFactory;
 import org.daisy.streamline.api.media.FileDetails;
-
-import aQute.bnd.annotation.component.Component;
+import org.osgi.service.component.annotations.Component;
 
 /**
  * Provides a factory for identifying xml files.

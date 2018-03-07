@@ -23,11 +23,11 @@ import org.daisy.dotify.tasks.tools.XsltTask;
 import org.daisy.streamline.api.identity.IdentificationFailedException;
 import org.daisy.streamline.api.media.AnnotatedFile;
 import org.daisy.streamline.api.media.DefaultAnnotatedFile;
+import org.daisy.streamline.api.option.UserOption;
 import org.daisy.streamline.api.tasks.ExpandingTask;
 import org.daisy.streamline.api.tasks.InternalTask;
 import org.daisy.streamline.api.tasks.InternalTaskException;
 import org.daisy.streamline.api.tasks.TaskGroup;
-import org.daisy.streamline.api.option.UserOption;
 import org.daisy.streamline.api.tasks.TaskSystemException;
 
 /**

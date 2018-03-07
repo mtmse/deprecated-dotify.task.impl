@@ -13,9 +13,9 @@ import java.util.logging.Logger;
 import org.daisy.dotify.common.xml.XMLTools;
 import org.daisy.streamline.api.media.AnnotatedFile;
 import org.daisy.streamline.api.media.DefaultAnnotatedFile;
+import org.daisy.streamline.api.option.UserOption;
 import org.daisy.streamline.api.tasks.InternalTaskException;
 import org.daisy.streamline.api.tasks.ReadWriteTask;
-import org.daisy.streamline.api.option.UserOption;
 
 class Text2ObflTask extends ReadWriteTask {
 	private static final String SOURCE_ENCODING = "source-encoding";

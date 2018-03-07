@@ -7,8 +7,7 @@ import java.util.Map;
 import org.daisy.streamline.api.validity.Validator;
 import org.daisy.streamline.api.validity.ValidatorFactory;
 import org.daisy.streamline.api.validity.ValidatorFactoryException;
-
-import aQute.bnd.annotation.component.Component;
+import org.osgi.service.component.annotations.Component;
 
 /**
  * @author Joel Håkansson

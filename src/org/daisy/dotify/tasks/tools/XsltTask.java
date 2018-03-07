@@ -18,10 +18,10 @@ import org.daisy.dotify.common.xml.XMLTools;
 import org.daisy.dotify.common.xml.XMLToolsException;
 import org.daisy.streamline.api.media.AnnotatedFile;
 import org.daisy.streamline.api.media.DefaultAnnotatedFile;
-import org.daisy.streamline.api.tasks.InternalTaskException;
-import org.daisy.streamline.api.tasks.ReadWriteTask;
 import org.daisy.streamline.api.option.UserOption;
 import org.daisy.streamline.api.option.UserOptionValue;
+import org.daisy.streamline.api.tasks.InternalTaskException;
+import org.daisy.streamline.api.tasks.ReadWriteTask;
 
 /**
  * <p>Task that runs an XSLT conversion.</p>
