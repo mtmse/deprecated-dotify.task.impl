@@ -43,7 +43,6 @@
 	<xsl:key name="noterefs" match="dtb:noteref" use="substring-after(@idref, '#')"/>
 
 	<xsl:template match="/">
-		<xsl:variable name="result">
 		<obfl version="2011-1" hyphenate="{$hyphenate}">
 			<xsl:attribute name="xml:lang"><xsl:value-of select="/dtb:dtbook/@xml:lang"/></xsl:attribute>
 			<xsl:call-template name="insertMetadata"/>
@@ -53,30 +52,6 @@
 			<xsl:call-template name="insertNoteCollection"/>
 			<xsl:apply-templates/>
 		</obfl>
-		</xsl:variable>
-		<xsl:apply-templates select="$result" mode="breakOutXMLData"/>
-	</xsl:template>
-	
-	<xsl:template match="obfl:xml-data" mode="breakOutXMLData">
-		<xsl:for-each select="ancestor::obfl:*[ancestor::obfl:sequence]">
-			<xsl:text disable-output-escaping="yes">&lt;/</xsl:text><xsl:value-of select="local-name()"/>
-			<xsl:text disable-output-escaping="yes">></xsl:text>
-		</xsl:for-each>
-		<xsl:copy-of select="."/>
-		<xsl:for-each select="ancestor::obfl:*[ancestor::obfl:sequence]">
-			<xsl:text disable-output-escaping="yes">&lt;</xsl:text><xsl:value-of select="local-name()"/>
-			<xsl:for-each select="@*[not(name()='id' or name()='break-before')]">
-				<xsl:value-of select="concat(' ', name(), '=', '&quot;', . , '&quot;')"></xsl:value-of>
-			</xsl:for-each>
-			<xsl:text disable-output-escaping="yes">></xsl:text>
-		</xsl:for-each>
-	</xsl:template>
-	
-	<xsl:template match="*|processing-instruction()|comment()" mode="breakOutXMLData">
-		<xsl:copy>
-			<xsl:copy-of select="@*"/>
-			<xsl:apply-templates mode="breakOutXMLData"/>
-		</xsl:copy>
 	</xsl:template>
 	
 	<xsl:template name="insertLayoutMaster">
