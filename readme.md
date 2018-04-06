@@ -5,9 +5,15 @@ Note: This is a provider bundle, but it currently exports some classes that can 
 provided. These classes may be moved to a separate library bundle in the future.
 
 # dotify.task.impl #
-Provides implementations for converting:
-- DTBook, epub, html, xml and text to OBFL
-- OBFL to PEF and text
+This component provides implementations for
+* idenfiying XML formats with root element name and namespace
+* validating OBFL and PEF files
+* converting
+  - DTBook, epub, html, xml and text to OBFL
+  - OBFL to PEF and text
+
+## Techniques ##
+Java, StAX, XSLT, OBFL, Schematron, RelaxNG
 
 ## Using ##
 Download the [latest release](http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22org.daisy.dotify%22%20%20a%3A%22dotify.task.impl%22) from maven central and add it to your runtime environment.
