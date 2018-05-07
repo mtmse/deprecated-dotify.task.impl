@@ -4,7 +4,7 @@
 <xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:dtb="http://www.daisy.org/z3986/2005/dtbook/" exclude-result-prefixes="dtb xs" xmlns="http://www.daisy.org/ns/2011/obfl">
 	<xsl:import href="default-modes.xsl"/>
 	<xsl:output method="xml" encoding="utf-8" indent="no"/>
-	
+	<xsl:strip-space elements="dtb:imggroup"/>
 	<xsl:param name="hyphenate" select="true()" as="xs:boolean"/>
 	<xsl:param name="show-print-page-breaks" as="xs:boolean" select="false()"/>
 

@@ -370,6 +370,11 @@ or count(descendant::dtb:note)>0 and count(descendant::*[not(ancestor::dtb:note)
 		</block>
 		<block><leader position="100%" pattern=":"/></block>
 	</xsl:template>
+	
+	<!-- Override default processing -->
+	<xsl:template match="dtb:imggroup" priority="10">
+		<xsl:apply-templates/>
+	</xsl:template>
 
 	<!-- Override default processing -->
 	<xsl:template match="dtb:p" mode="block-mode" priority="10">
