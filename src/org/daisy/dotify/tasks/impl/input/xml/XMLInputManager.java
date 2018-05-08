@@ -17,7 +17,6 @@ import org.daisy.dotify.common.io.ResourceLocator;
 import org.daisy.dotify.common.io.ResourceLocatorException;
 import org.daisy.dotify.tasks.impl.identity.XmlIdentifier;
 import org.daisy.dotify.tasks.impl.input.DuplicatorTask;
-import org.daisy.dotify.tasks.impl.input.Keys;
 import org.daisy.dotify.tasks.impl.input.ValidatorTask;
 import org.daisy.dotify.tasks.tools.XsltTask;
 import org.daisy.streamline.api.identity.IdentificationFailedException;
@@ -63,6 +62,7 @@ public class XMLInputManager implements TaskGroup {
 	 * Specifies a location where the intermediary obfl output should be stored
 	 */
 	static final String OBFL_OUTPUT_LOCATION = "obfl-output-location";
+	private static final String TEMPLATE_KEY = "template";
 	private static final String TEMPLATES_PATH = "templates/";
 	private static final String LOCALIZATION_PROPS = "localization.xml";
 	private final ResourceLocator localLocator;
@@ -101,11 +101,11 @@ public class XMLInputManager implements TaskGroup {
 	public List<InternalTask> compile(Map<String, Object> parameters)
 			throws TaskSystemException {
 		String template;
-		if (parameters.get(Keys.TEMPLATE)==null) {
+		if (parameters.get(TEMPLATE_KEY)==null) {
 			logger.info("No template set, using default.");
 			template = "default";
 		} else {
-			template = parameters.get(Keys.TEMPLATE).toString().toLowerCase();
+			template = parameters.get(TEMPLATE_KEY).toString().toLowerCase();
 		}
 		
 		List<InternalTask> ret = new ArrayList<>();
