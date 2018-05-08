@@ -11,6 +11,7 @@ import org.daisy.streamline.api.tasks.InternalTask;
 import org.daisy.streamline.api.tasks.TaskGroup;
 import org.daisy.streamline.api.tasks.TaskGroupSpecification;
 import org.daisy.streamline.api.tasks.TaskSystemException;
+import org.daisy.streamline.api.validity.ValidatorFactoryMakerService;
 
 /**
  * Provides a task group for running the Dotify formatter.
@@ -22,17 +23,20 @@ public class LayoutEngine implements TaskGroup {
 	private final TaskGroupSpecification spec;
 	private final PagedMediaWriterFactoryMakerService pmw;
 	private final FormatterEngineFactoryService fe;
+	private final ValidatorFactoryMakerService vf;
 
 	/**
 	 * Creates a new layout engine with the specified parameters.
 	 * @param spec the task group specification
 	 * @param pmw a paged media writer factory maker service
 	 * @param fe a formatter engine factory service
+	 * @param vf a validator factory service
 	 */
-	public LayoutEngine(TaskGroupSpecification spec, PagedMediaWriterFactoryMakerService pmw, FormatterEngineFactoryService fe) {
+	public LayoutEngine(TaskGroupSpecification spec, PagedMediaWriterFactoryMakerService pmw, FormatterEngineFactoryService fe, ValidatorFactoryMakerService vf) {
 		this.spec = spec;
 		this.pmw = pmw;
 		this.fe = fe;
+		this.vf = vf;
 	}
 
 	@Override
@@ -56,7 +60,7 @@ public class LayoutEngine implements TaskGroup {
 		p2.remove("output");
 		p2.remove("obfl-output-location");
 		p2.remove(Keys.TEMP_FILES_DIRECTORY);
-		ret.add(new LayoutEngineTask(p2, spec, pmw, fe));
+		ret.add(new LayoutEngineTask(p2, spec, pmw, fe, vf));
 		return ret;
 	}
 

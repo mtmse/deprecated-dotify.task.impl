@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.net.MalformedURLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -11,6 +12,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.xml.namespace.QName;
@@ -27,7 +29,6 @@ import org.daisy.dotify.api.writer.PagedMediaWriter;
 import org.daisy.dotify.api.writer.PagedMediaWriterConfigurationException;
 import org.daisy.dotify.api.writer.PagedMediaWriterFactory;
 import org.daisy.dotify.api.writer.PagedMediaWriterFactoryMakerService;
-import org.daisy.dotify.tasks.impl.input.ObflResourceLocator.ObflResourceIdentifier;
 import org.daisy.streamline.api.media.AnnotatedFile;
 import org.daisy.streamline.api.media.DefaultAnnotatedFile;
 import org.daisy.streamline.api.option.UserOption;
@@ -36,6 +37,10 @@ import org.daisy.streamline.api.tasks.InternalTaskException;
 import org.daisy.streamline.api.tasks.ReadWriteTask;
 import org.daisy.streamline.api.tasks.TaskGroupSpecification;
 import org.daisy.streamline.api.tasks.TaskSystemException;
+import org.daisy.streamline.api.validity.ValidationReport;
+import org.daisy.streamline.api.validity.Validator;
+import org.daisy.streamline.api.validity.ValidatorFactoryMakerService;
+import org.daisy.streamline.api.validity.ValidatorMessage;
 
 /**
  * <p>
@@ -62,6 +67,7 @@ public class LayoutEngineTask extends ReadWriteTask  {
 	private final FormatterConfiguration config;
 	private final PagedMediaWriter writer;
 	private final FormatterEngineFactoryService fe;
+	private final ValidatorFactoryMakerService vf;
 	private final TaskGroupSpecification spec;
 	private static final Logger logger = Logger.getLogger(LayoutEngineTask.class.getCanonicalName());
 	private List<UserOption> options;
@@ -72,9 +78,10 @@ public class LayoutEngineTask extends ReadWriteTask  {
 	 * @param spec the specification
 	 * @param pmw the paged media writer factory maker service
 	 * @param fe the formatter engine factory service
+	 * @param vf a validator factory service
 	 * @throws TaskSystemException if the instance could not be created 
 	 */
-	public LayoutEngineTask(Properties p2, TaskGroupSpecification spec, PagedMediaWriterFactoryMakerService pmw, FormatterEngineFactoryService fe) throws TaskSystemException {
+	public LayoutEngineTask(Properties p2, TaskGroupSpecification spec, PagedMediaWriterFactoryMakerService pmw, FormatterEngineFactoryService fe, ValidatorFactoryMakerService vf) throws TaskSystemException {
 		super(buildName(spec.getOutputFormat().toUpperCase()));
 		addDefaults(p2);
 		String translatorMode = getTranslationMode(p2, spec.getOutputFormat());
@@ -82,6 +89,7 @@ public class LayoutEngineTask extends ReadWriteTask  {
 		this.writer = getWriter(p2, spec, pmw);
 		this.config = getFormatterConfig(p2, translatorMode, spec.getLocale());
 		this.fe = fe;
+		this.vf = vf;
 		this.options = null;
 	}
 	
@@ -224,11 +232,33 @@ public class LayoutEngineTask extends ReadWriteTask  {
 	public AnnotatedFile execute(AnnotatedFile input, File output) throws InternalTaskException {
 		try {
 
-			logger.info("Validating input...");
-
+			logger.info(String.format("Validating input (%s)...", input.getFile()));
+			Validator v = vf.newValidator("application/x-obfl+xml");
 			try {
-				ValidatorTask.validate(input.getFile(), ObflResourceLocator.getInstance().getResourceByIdentifier(ObflResourceIdentifier.OBFL_RNG_SCHEMA));
-			} catch (ValidatorException e) {
+				ValidationReport vr = v.validate(input.getFile().toURI().toURL());
+				for (ValidatorMessage m : vr.getMessages()) {
+					switch (m.getType()) {
+						case ERROR: case FATAL_ERROR:case WARNING:
+							// Using Level.WARNING for all validation messages (reserving Level.SEVERE for system errors) 
+							logger.log(Level.WARNING, m.toString());
+							break;
+						case NOTICE: default:
+							if (logger.isLoggable(Level.INFO)) {
+								logger.log(Level.INFO, m.toString());
+							}
+							break;
+					}
+				}
+				if (!vr.isValid()) {
+					logger.warning("The OBFL-file isn't valid! If this is systematic, please consider fixing your code. Invalid input will be rejected in future versions.");
+					try {
+						Thread.sleep(10000);
+					} catch (InterruptedException e) {
+						Thread.currentThread().interrupt();
+						throw new InternalTaskException(e);
+					}
+				}
+			} catch (MalformedURLException e) {
 				throw new InternalTaskException("Input validation failed.", e);
 			}
 			

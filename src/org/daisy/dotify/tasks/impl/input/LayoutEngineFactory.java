@@ -12,6 +12,8 @@ import org.daisy.streamline.api.tasks.TaskGroup;
 import org.daisy.streamline.api.tasks.TaskGroupFactory;
 import org.daisy.streamline.api.tasks.TaskGroupInformation;
 import org.daisy.streamline.api.tasks.TaskGroupSpecification;
+import org.daisy.streamline.api.validity.ValidatorFactoryMaker;
+import org.daisy.streamline.api.validity.ValidatorFactoryMakerService;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
@@ -28,6 +30,7 @@ public class LayoutEngineFactory implements TaskGroupFactory {
 	private final Set<TaskGroupInformation> information;
 	private PagedMediaWriterFactoryMakerService pmw;
 	private FormatterEngineFactoryService fe;
+	private ValidatorFactoryMakerService vf;
 
 	/**
 	 * Creates a new layout engine factory.
@@ -55,7 +58,7 @@ public class LayoutEngineFactory implements TaskGroupFactory {
 	
 	@Override
 	public TaskGroup newTaskGroup(TaskGroupSpecification spec) {
-		return new LayoutEngine(spec, pmw, fe);
+		return new LayoutEngine(spec, pmw, fe, vf);
 	}
 
 	@Override
@@ -69,6 +72,9 @@ public class LayoutEngineFactory implements TaskGroupFactory {
 		}
 		if (fe == null) {
 			fe = FormatterEngineMaker.newInstance().getFactory();
+		}
+		if (vf == null) {
+			vf = ValidatorFactoryMaker.newInstance();
 		}
 	}
 	
@@ -106,4 +112,20 @@ public class LayoutEngineFactory implements TaskGroupFactory {
 		this.fe = null;
 	}
 	
+	/**
+	 * Sets a factory dependency.
+	 * @param service the dependency
+	 */
+	@Reference(cardinality=ReferenceCardinality.MANDATORY)
+	public void setValidatorFactory(ValidatorFactoryMakerService service) {
+		this.vf = service;
+	}
+	
+	/**
+	 * Removes a factory dependency.
+	 * @param service the dependency to remove
+	 */
+	public void unsetValidatorFactory(ValidatorFactoryMakerService service) {
+		this.vf = null;
+	}
 }
