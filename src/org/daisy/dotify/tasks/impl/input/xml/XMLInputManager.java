@@ -229,6 +229,7 @@ public class XMLInputManager implements TaskGroup {
 		}
 
 		@Override
+		@Deprecated
 		public List<InternalTask> resolve(File input) throws InternalTaskException {
 			return resolve(new DefaultAnnotatedFile.Builder(input).build());
 		}

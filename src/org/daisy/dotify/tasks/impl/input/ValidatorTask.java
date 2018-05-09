@@ -17,11 +17,11 @@ import org.daisy.dotify.common.xml.XMLInfo;
 import org.daisy.dotify.common.xml.XMLTools;
 import org.daisy.dotify.common.xml.XMLToolsException;
 import org.daisy.streamline.api.media.AnnotatedFile;
+import org.daisy.streamline.api.media.DefaultAnnotatedFile;
 import org.daisy.streamline.api.tasks.InternalTaskException;
 import org.daisy.streamline.api.tasks.ReadOnlyTask;
 import org.daisy.streamline.api.validity.ValidationReport;
 import org.daisy.streamline.api.validity.ValidatorMessage;
-import org.daisy.streamline.api.validity.ValidatorMessage.Type;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -111,7 +111,7 @@ public class ValidatorTask extends ReadOnlyTask {
 			return true;
 		} catch (SAXException | ParserConfigurationException | IOException e) {
 			errorHandler.addMessage(
-					new ValidatorMessage.Builder(Type.FATAL_ERROR)
+					new ValidatorMessage.Builder(ValidatorMessage.Type.FATAL_ERROR)
 					.exception(e)
 					.build()
 				);
@@ -130,7 +130,7 @@ public class ValidatorTask extends ReadOnlyTask {
 			vd.loadSchema(configureInputSource(schema));
         } catch (SAXException | IOException | URISyntaxException e) {
 			errorHandler.addMessage(
-					new ValidatorMessage.Builder(Type.FATAL_ERROR)
+					new ValidatorMessage.Builder(ValidatorMessage.Type.FATAL_ERROR)
 					.message("Failed to load schema: " + schema)
 					.exception(e)
 					.build()
@@ -141,7 +141,7 @@ public class ValidatorTask extends ReadOnlyTask {
 			return vd.validate(configureInputSource(url));
 		} catch (SAXException | IOException | URISyntaxException e) {
 			errorHandler.addMessage(
-					new ValidatorMessage.Builder(Type.FATAL_ERROR)
+					new ValidatorMessage.Builder(ValidatorMessage.Type.FATAL_ERROR)
 					.exception(e)
 					.build()
 			);
@@ -156,16 +156,13 @@ public class ValidatorTask extends ReadOnlyTask {
 	}
 
 	@Override
-	public void execute(File input) throws InternalTaskException {
+	public void execute(AnnotatedFile input) throws InternalTaskException {
 		try {
-			boolean ret = validate(input, schema);
-			//FileUtils.copy(input, output);
+			boolean ret = validate(input.getPath().toFile(), schema);
 			if (ret) {
 				return;
 			}
-		} /*catch (IOException e) {
-			throw new InternalTaskException("Failed to copy file.", e);
-		} */catch (ValidatorException e) {
+		} catch (ValidatorException e) {
 			throw new InternalTaskException("Validation failed.", e);
 		}
 		throw new InternalTaskException("Validation failed.");
@@ -245,8 +242,9 @@ public class ValidatorTask extends ReadOnlyTask {
 	}
 
 	@Override
-	public void execute(AnnotatedFile input) throws InternalTaskException {
-		execute(input.getFile());
+	@Deprecated
+	public void execute(File input) throws InternalTaskException {
+		execute(DefaultAnnotatedFile.with(input).build());
 	}
 
 }

@@ -10,6 +10,8 @@ import java.io.InputStream;
 import java.io.StringWriter;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -34,6 +36,8 @@ import javax.xml.xpath.XPathFactory;
 
 import org.daisy.braille.utils.pef.XMLFileCompare;
 import org.daisy.dotify.tasks.tools.XsltTask;
+import org.daisy.streamline.api.media.DefaultAnnotatedFile;
+import org.daisy.streamline.api.media.FormatIdentifier;
 import org.daisy.streamline.api.tasks.InternalTaskException;
 import org.daisy.streamline.api.tasks.TaskGroup;
 import org.daisy.streamline.api.tasks.TaskGroupSpecification;
@@ -114,18 +118,18 @@ public class TestHelper {
 	}
 
 	public static void toObfl(String srcPath, File res, String lang, Map<String, Object> parameters) throws IOException, TaskSystemException, URISyntaxException {
-		TaskGroup tg = new XMLInputManagerFactory().newTaskGroup(new TaskGroupSpecification("xml", "obfl", lang));
+		TaskGroup tg = new XMLInputManagerFactory().newTaskGroup(new TaskGroupSpecification.Builder(FormatIdentifier.with("xml"), FormatIdentifier.with("obfl"), lang).build());
 		TaskRunner tr = new TaskRunner.Builder().build();
-		File src = new File(TestHelper.class.getResource(srcPath).toURI());
-		tr.runTasks(src, res, tg.compile(parameters));
+		Path src = Paths.get(TestHelper.class.getResource(srcPath).toURI());
+		tr.runTasks(DefaultAnnotatedFile.with(src).build(), res, tg.compile(parameters));
 	}
 
 	public static void runXSLT(String input, String xslt, String expected, Map<String, Object> options, boolean keep) throws IOException, InternalTaskException, URISyntaxException{
 		File actual = File.createTempFile(TestHelper.class.getName(), ".tmp");
 		try {
 			XsltTask task = new XsltTask("XSLT Test", TestHelper.class.getResource(xslt), options);
-			File src = new File(TestHelper.class.getResource(input).toURI());
-			task.execute(src, actual);
+			Path src = Paths.get(TestHelper.class.getResource(input).toURI());
+			task.execute(DefaultAnnotatedFile.with(src).build(), actual);
 			XMLFileCompare c = new XMLFileCompare(TransformerFactory.newInstance());
 			try {
 				assertTrue(c.compareXML(new FileInputStream(actual), TestHelper.class.getResourceAsStream(expected)));

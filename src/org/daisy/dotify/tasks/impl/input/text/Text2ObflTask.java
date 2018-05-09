@@ -52,8 +52,8 @@ class Text2ObflTask extends ReadWriteTask {
 	@Override
 	public AnnotatedFile execute(AnnotatedFile input, File output) throws InternalTaskException {
 		try {
-			Text2ObflWriter fw = new Text2ObflWriter(input.getFile(), output, encoding!=null?encoding:
-				XMLTools.detectBomEncoding(Files.readAllBytes(input.getFile().toPath()))
+			Text2ObflWriter fw = new Text2ObflWriter(input.getPath().toFile(), output, encoding!=null?encoding:
+				XMLTools.detectBomEncoding(Files.readAllBytes(input.getPath()))
 					.map(v->v.name())
 					.orElse(DEFAULT_ENCODING));
 			fw.setRootLang(getLanguage());
@@ -84,10 +84,11 @@ class Text2ObflTask extends ReadWriteTask {
 		} catch (IOException e) {
 			throw new InternalTaskException("IOException", e);
 		}
-		return new DefaultAnnotatedFile.Builder(output).extension("obfl").mediaType("application/x-obfl+xml").build();
+		return new DefaultAnnotatedFile.Builder(output.toPath()).extension("obfl").mediaType("application/x-obfl+xml").build();
 	}
 
 	@Override
+	@Deprecated
 	public void execute(File input, File output) throws InternalTaskException {
 		execute(new DefaultAnnotatedFile.Builder(input).build(), output);
 	}

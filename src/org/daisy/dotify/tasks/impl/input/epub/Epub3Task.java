@@ -1,8 +1,8 @@
 package org.daisy.dotify.tasks.impl.input.epub;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -33,6 +33,7 @@ public class Epub3Task extends ReadWriteTask {
 	}
 
 	@Override
+	@Deprecated
 	public void execute(File input, File output) throws InternalTaskException {
 		execute(new DefaultAnnotatedFile.Builder(input).build(), output);
 	}
@@ -43,7 +44,7 @@ public class Epub3Task extends ReadWriteTask {
 			File unpacked = FileIO.createTempDir();
 			try {
 				logger.info("Unpacking...");
-				ContentExtractor.unpack(new FileInputStream(input.getFile()), unpacked);
+				ContentExtractor.unpack(Files.newInputStream(input.getPath()), unpacked);
 				logger.info("Merging content files...");
 				ContainerReader container = new ContainerReader(unpacked);
 				ContentMerger merger = new ContentMerger(container);
@@ -65,7 +66,7 @@ public class Epub3Task extends ReadWriteTask {
 		} catch (IOException e) {
 			throw new InternalTaskException(e);
 		}
-		return new DefaultAnnotatedFile.Builder(output).extension("html").mediaType("application/xhtml+xml").build();
+		return new DefaultAnnotatedFile.Builder(output.toPath()).extension("html").mediaType("application/xhtml+xml").build();
 	}
 	
 	@Override

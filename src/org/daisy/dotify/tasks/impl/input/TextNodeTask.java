@@ -1,10 +1,10 @@
 package org.daisy.dotify.tasks.impl.input;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Files;
 
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
@@ -50,21 +50,24 @@ public class TextNodeTask extends ReadWriteTask {
 		TextNodeFilter tnf = null;
 
 		try {
-			tnf = new TextNodeFilter(inFactory.createXMLEventReader(new FileInputStream(input.getFile())), new FileOutputStream(output), filters);
+			tnf = new TextNodeFilter(inFactory.createXMLEventReader(Files.newInputStream(input.getPath())), new FileOutputStream(output), filters);
 			tnf.filter();
 		} catch (FileNotFoundException e) {
 			throw new InternalTaskException("FileNotFoundException:", e);
 		} catch (XMLStreamException e) {
 			throw new InternalTaskException("XMLStreamException:", e);
+		} catch (IOException e) {
+			throw new InternalTaskException("IOException:", e);
 		} finally {
 			if (tnf!=null) {
 				try { tnf.close(); } catch (IOException e) { }
 			}
 		}
-		return new DefaultAnnotatedFile.Builder(output).extension("xml").mediaType("application/xml").build();
+		return new DefaultAnnotatedFile.Builder(output.toPath()).extension("xml").mediaType("application/xml").build();
 	}
 
 	@Override
+	@Deprecated
 	public void execute(File input, File output) throws InternalTaskException {
 		execute(new DefaultAnnotatedFile.Builder(input).build(), output);
 	}

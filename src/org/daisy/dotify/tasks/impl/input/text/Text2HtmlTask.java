@@ -48,8 +48,8 @@ class Text2HtmlTask extends ReadWriteTask {
 	@Override
 	public AnnotatedFile execute(AnnotatedFile input, File output) throws InternalTaskException {
 		try {
-			Text2HtmlWriter fw = new Text2HtmlWriter(input.getFile(), output, encoding!=null?encoding:
-				XMLTools.detectBomEncoding(Files.readAllBytes(input.getFile().toPath()))
+			Text2HtmlWriter fw = new Text2HtmlWriter(input.getPath().toFile(), output, encoding!=null?encoding:
+				XMLTools.detectBomEncoding(Files.readAllBytes(input.getPath()))
 					.map(v->v.name())
 					.orElse(DEFAULT_ENCODING));
 			fw.setRootLang(getLanguage());
@@ -59,10 +59,11 @@ class Text2HtmlTask extends ReadWriteTask {
 		} catch (IOException e) {
 			throw new InternalTaskException("IOException", e);
 		}
-		return new DefaultAnnotatedFile.Builder(output).extension("html").mediaType("application/xhtml+xml").build();
+		return new DefaultAnnotatedFile.Builder(output.toPath()).extension("html").mediaType("application/xhtml+xml").build();
 	}
 
 	@Override
+	@Deprecated
 	public void execute(File input, File output) throws InternalTaskException {
 		execute(new DefaultAnnotatedFile.Builder(input).build(), output);
 	}

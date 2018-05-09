@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Logger;
 
+import org.daisy.streamline.api.media.FormatIdentifier;
 import org.daisy.streamline.api.tasks.TaskGroup;
 import org.daisy.streamline.api.tasks.TaskGroupFactory;
 import org.daisy.streamline.api.tasks.TaskGroupInformation;
@@ -47,7 +48,7 @@ public class XMLInputManagerFactory implements TaskGroupFactory {
 			} else {
 				for (String locale : supportedLocales) {				
 					tmp.add(TaskGroupInformation.newConvertBuilder(format, "obfl").locale(locale).build());
-					supportedSpecifications.add(new TaskGroupSpecification(format, "obfl", locale));
+					supportedSpecifications.add(new TaskGroupSpecification.Builder(FormatIdentifier.with(format), FormatIdentifier.with("obfl"), locale).build());
 				}
 			}
 		}

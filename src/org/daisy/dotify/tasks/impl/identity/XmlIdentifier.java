@@ -44,14 +44,14 @@ public class XmlIdentifier implements Identifier {
 	public AnnotatedFile identify(AnnotatedFile f) throws IdentificationFailedException {
 		XMLInfo info = null;
 		try {
-			info = XMLTools.parseXML(f.getFile());
+			info = XMLTools.parseXML(f.getPath().toFile());
 		} catch (XMLToolsException e) {
 			throw new IdentificationFailedException(e);
 		}
 		if (info==null) {
-			throw new IdentificationFailedException("Not well-formed XML: " + f.getFile());
+			throw new IdentificationFailedException("Not well-formed XML: " + f.getPath());
 		} else {
-			DefaultAnnotatedFile.Builder ret = new DefaultAnnotatedFile.Builder(f.getFile())
+			DefaultAnnotatedFile.Builder ret = new DefaultAnnotatedFile.Builder(f.getPath())
 					.property(XMLNS_KEY, info.getUri())
 					.property(LOCAL_NAME_KEY, info.getLocalName())
 					.property(ATTRIBUTES_KEY, info.getAttributes());

@@ -6,6 +6,7 @@ import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 
 import org.daisy.streamline.api.media.AnnotatedFile;
+import org.daisy.streamline.api.media.DefaultAnnotatedFile;
 import org.daisy.streamline.api.tasks.InternalTaskException;
 import org.daisy.streamline.api.tasks.ReadOnlyTask;
 
@@ -30,17 +31,18 @@ public class DuplicatorTask extends ReadOnlyTask {
 	}
 
 	@Override
+	@Deprecated
 	public void execute(File input) throws InternalTaskException {
-		try {
-			Files.copy(input.toPath(), copy.toPath(), StandardCopyOption.REPLACE_EXISTING);
-		} catch (IOException e) {
-			throw new InternalTaskException("Exception while copying file " + input + " to " + copy, e);
-		}
+		execute(DefaultAnnotatedFile.with(input).build());
 	}
 
 	@Override
 	public void execute(AnnotatedFile input) throws InternalTaskException {
-		execute(input.getFile());
+		try {
+			Files.copy(input.getPath(), copy.toPath(), StandardCopyOption.REPLACE_EXISTING);
+		} catch (IOException e) {
+			throw new InternalTaskException("Exception while copying file " + input + " to " + copy, e);
+		}
 	}
 
 }

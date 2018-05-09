@@ -43,7 +43,7 @@ public class TextInputManagerFactory implements TaskGroupFactory {
 
 	@Override
 	public TaskGroup newTaskGroup(TaskGroupSpecification spec) {
-		if (HTML.equalsIgnoreCase(spec.getOutputFormat())) {
+		if (HTML.equalsIgnoreCase(spec.getOutputType().getIdentifier())) {
 			return new TextInputManager(spec.getLocale(), Type.HTML);
 		} else {
 			return new TextInputManager(spec.getLocale(), Type.OBFL);

@@ -133,14 +133,15 @@ public class XsltTask extends ReadWriteTask {
 	@Override
 	public AnnotatedFile execute(AnnotatedFile input, File output) throws InternalTaskException {
 		try {
-			XMLTools.transform(input.getFile(), output, url, options, new net.sf.saxon.TransformerFactoryImpl());
+			XMLTools.transform(input.getPath().toFile(), output, url, options, new net.sf.saxon.TransformerFactoryImpl());
 		} catch (XMLToolsException e) {
 			throw new InternalTaskException("Error: ", e);
 		}
-		return new DefaultAnnotatedFile.Builder(output).extension("xml").mediaType("application/xml").build();
+		return new DefaultAnnotatedFile.Builder(output.toPath()).extension("xml").mediaType("application/xml").build();
 	}
 
 	@Override
+	@Deprecated
 	public void execute(File input, File output) throws InternalTaskException {
 		execute(new DefaultAnnotatedFile.Builder(input).build(), output);
 	}
