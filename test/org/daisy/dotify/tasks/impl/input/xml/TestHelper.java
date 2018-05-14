@@ -165,6 +165,7 @@ public class TestHelper {
 		assertTrue(equal);
 	}
 	
+	@SuppressWarnings("unused")
 	private static Node getNode(Node d, String xpath, NamespaceContext nc) throws XPathExpressionException {
 		XPathFactory xpf = XPathFactory.newInstance();
 		XPath xp = xpf.newXPath();

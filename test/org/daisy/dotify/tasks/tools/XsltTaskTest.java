@@ -3,6 +3,7 @@ package org.daisy.dotify.tasks.tools;
 import static org.junit.Assert.assertArrayEquals;
 
 import org.junit.Test;
+@SuppressWarnings("javadoc")
 public class XsltTaskTest {
 
 	@Test
