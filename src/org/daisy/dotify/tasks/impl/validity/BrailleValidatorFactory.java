@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.daisy.streamline.api.media.FileDetails;
 import org.daisy.streamline.api.validity.Validator;
 import org.daisy.streamline.api.validity.ValidatorFactory;
 import org.daisy.streamline.api.validity.ValidatorFactoryException;
@@ -15,6 +16,8 @@ import org.osgi.service.component.annotations.Component;
  */
 @Component
 public class BrailleValidatorFactory implements ValidatorFactory {
+	private static final String MIME_OBFL = "application/x-obfl+xml";
+	private static final String MIME_PEF = "application/x-pef+xml";
 	Map<String, Class<? extends Validator>> validators;
 	
 	/**
@@ -22,8 +25,8 @@ public class BrailleValidatorFactory implements ValidatorFactory {
 	 */
 	public BrailleValidatorFactory() {
 		validators = new HashMap<>();
-		validators.put("application/x-obfl+xml", OBFLValidator.class);
-		validators.put("application/x-pef+xml", PEFValidator.class);
+		validators.put(MIME_OBFL, OBFLValidator.class);
+		validators.put(MIME_PEF, PEFValidator.class);
 	}
 
 	@Override
@@ -42,6 +45,16 @@ public class BrailleValidatorFactory implements ValidatorFactory {
 		} catch (InstantiationException | IllegalAccessException e) {
 			throw new ValidatorFactoryException("Cannot instantiate class.", e);
 		}
+	}
+
+	@Override
+	public Validator newValidator(FileDetails details) throws ValidatorFactoryException {
+		return newValidator(details.getMediaType());
+	}
+
+	@Override
+	public boolean supportsDetails(FileDetails details) {
+		return validators.containsKey(details.getMediaType());
 	}
 
 }

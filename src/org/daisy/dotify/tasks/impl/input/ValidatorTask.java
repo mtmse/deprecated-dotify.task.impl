@@ -2,8 +2,8 @@ package org.daisy.dotify.tasks.impl.input;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -18,6 +18,7 @@ import org.daisy.dotify.common.xml.XMLTools;
 import org.daisy.dotify.common.xml.XMLToolsException;
 import org.daisy.streamline.api.media.AnnotatedFile;
 import org.daisy.streamline.api.media.DefaultAnnotatedFile;
+import org.daisy.streamline.api.media.InputStreamSupplier;
 import org.daisy.streamline.api.tasks.InternalTaskException;
 import org.daisy.streamline.api.tasks.ReadOnlyTask;
 import org.daisy.streamline.api.validity.ValidationReport;
@@ -81,15 +82,45 @@ public class ValidatorTask extends ReadOnlyTask {
 	 * @throws ValidatorException if validation fails
 	 */
 	public static ValidationReport validate(URL input, boolean javaLogging, URL ... schemas) throws ValidatorException {
-		XMLInfo info;
+		return validate(new UrlInputStreamSupplier(input), javaLogging, schemas);
+	}
+
+	/**
+	 * Validates the contents of the specified resource against the specified validation schema.
+	 * @param input the input
+	 * @param schemas the schemas
+	 * @param javaLogging true if validation messages should be written to java logging, false otherwise
+	 * @return returns true if the resource is valid, false otherwise
+	 * @throws ValidatorException if validation fails
+	 */
+	public static ValidationReport validate(InputStreamSupplier input, boolean javaLogging, URL ... schemas) throws ValidatorException {
+		URL inputUrl;
 		try {
-			info = XMLTools.parseXML(input.toURI(), true);
-		} catch (XMLToolsException | URISyntaxException e1) {
+			inputUrl = new URL(input.getSystemId());
+		} catch (MalformedURLException e1) {
 			throw new ValidatorException(e1);
 		}
-		ValidatorTaskErrorHandler errorHandler = new ValidatorTaskErrorHandler(input, javaLogging);
+		XMLInfo info;
+		try (InputStream is = input.newInputStream()) {
+			InputSource source = new InputSource(is);
+			source.setSystemId(input.getSystemId());
+			info = XMLTools.parseXML(source, true);
+		} catch (XMLToolsException | IOException e1) {
+			throw new ValidatorException(e1);
+		}
+		ValidatorTaskErrorHandler errorHandler = new ValidatorTaskErrorHandler(inputUrl, javaLogging);
 		if (info.getSystemId()!=null || info.getPublicId()!=null) {
-			runDTDValidation(input, errorHandler);
+			try (InputStream is = input.newInputStream()) {
+				InputSource source = new InputSource(is);
+				source.setSystemId(input.getSystemId());
+				runDTDValidation(source, errorHandler);
+			} catch (IOException e) {
+				errorHandler.addMessage(
+						new ValidatorMessage.Builder(ValidatorMessage.Type.FATAL_ERROR)
+						.exception(e)
+						.build()
+				);
+			}
 		}
 		for (URL schema : schemas) {
 			runSchemaValidation(input, schema, errorHandler);
@@ -97,7 +128,7 @@ public class ValidatorTask extends ReadOnlyTask {
 		return errorHandler.buildReport();
 	}
 
-	private static boolean runDTDValidation(URL url, ValidatorTaskErrorHandler errorHandler) {
+	private static boolean runDTDValidation(InputSource input, ValidatorTaskErrorHandler errorHandler) {
 		SAXParser saxParser = null;
 		SAXParserFactory factory = SAXParserFactory.newInstance();
 		factory.setNamespaceAware(true);
@@ -107,7 +138,7 @@ public class ValidatorTask extends ReadOnlyTask {
 			saxParser.getXMLReader().setErrorHandler(errorHandler);
 			saxParser.getXMLReader().setContentHandler(new DefaultHandler());
 			saxParser.getXMLReader().setEntityResolver(new EntityResolverCache());
-			saxParser.getXMLReader().parse(new InputSource(url.openStream()));
+			saxParser.getXMLReader().parse(input);
 			return true;
 		} catch (SAXException | ParserConfigurationException | IOException e) {
 			errorHandler.addMessage(
@@ -119,16 +150,18 @@ public class ValidatorTask extends ReadOnlyTask {
 		return false;
 	}
 
-	private static boolean runSchemaValidation(URL url, URL schema, ValidatorTaskErrorHandler errorHandler) {
+	private static boolean runSchemaValidation(InputStreamSupplier input, URL schema, ValidatorTaskErrorHandler errorHandler) {
 		PropertyMapBuilder propertyBuilder = new PropertyMapBuilder();
     	RngProperty.CHECK_ID_IDREF.add(propertyBuilder);
 		propertyBuilder.put(ValidateProperty.ERROR_HANDLER, errorHandler);
 		propertyBuilder.put(ValidateProperty.ENTITY_RESOLVER, new EntityResolverCache());
 		PropertyMap map = propertyBuilder.toPropertyMap();
         ValidationDriver vd = new ValidationDriver(map);
-        try {
-			vd.loadSchema(configureInputSource(schema));
-        } catch (SAXException | IOException | URISyntaxException e) {
+        try (InputStream is = schema.openStream()) {
+    		InputSource source = new InputSource();
+    		source.setSystemId(schema.toString());
+			vd.loadSchema(source);
+        } catch (SAXException | IOException e) {
 			errorHandler.addMessage(
 					new ValidatorMessage.Builder(ValidatorMessage.Type.FATAL_ERROR)
 					.message("Failed to load schema: " + schema)
@@ -137,9 +170,11 @@ public class ValidatorTask extends ReadOnlyTask {
 			);
 			return false;
 		}
-        try {
-			return vd.validate(configureInputSource(url));
-		} catch (SAXException | IOException | URISyntaxException e) {
+        try (InputStream is = input.newInputStream()) {
+			InputSource source = new InputSource(is);
+			source.setSystemId(input.getSystemId());
+			return vd.validate(source);
+		} catch (SAXException | IOException e) {
 			errorHandler.addMessage(
 					new ValidatorMessage.Builder(ValidatorMessage.Type.FATAL_ERROR)
 					.exception(e)
@@ -149,12 +184,6 @@ public class ValidatorTask extends ReadOnlyTask {
 		}
 	}
 	
-	private static InputSource configureInputSource(URL url) throws IOException, URISyntaxException {
-		InputSource is = new InputSource(url.openStream());
-		is.setSystemId(url.toURI().toString());
-		return is;
-	}
-
 	@Override
 	public void execute(AnnotatedFile input) throws InternalTaskException {
 		try {
@@ -166,6 +195,24 @@ public class ValidatorTask extends ReadOnlyTask {
 			throw new InternalTaskException("Validation failed.", e);
 		}
 		throw new InternalTaskException("Validation failed.");
+	}
+	
+	private static class UrlInputStreamSupplier implements InputStreamSupplier {
+		private final URL url;
+		
+		public UrlInputStreamSupplier(URL url) {
+			this.url = url;
+		}
+
+		@Override
+		public InputStream newInputStream() throws IOException {
+			return url.openStream();
+		}
+
+		@Override
+		public String getSystemId() {
+			return url.toString();
+		}
 	}
 	
 	private static class ValidatorTaskErrorHandler implements ErrorHandler {
