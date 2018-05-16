@@ -9,6 +9,7 @@ import org.daisy.dotify.tasks.impl.input.ObflResourceLocator;
 import org.daisy.dotify.tasks.impl.input.ObflResourceLocator.ObflResourceIdentifier;
 import org.daisy.dotify.tasks.impl.input.ValidatorException;
 import org.daisy.dotify.tasks.impl.input.ValidatorTask;
+import org.daisy.streamline.api.media.InputStreamSupplier;
 import org.daisy.streamline.api.validity.ValidationReport;
 import org.daisy.streamline.api.validity.Validator;
 
@@ -17,6 +18,18 @@ class OBFLValidator implements Validator {
 
 	@Override
 	public ValidationReport validate(URL input, Map<String, Object> params) {
+		try {
+			return ValidatorTask.validate(input,
+					false,
+					ObflResourceLocator.getInstance().getResourceByIdentifier(ObflResourceIdentifier.OBFL_RNG_SCHEMA));
+		} catch (ValidatorException e) {
+			logger.log(Level.WARNING, "Failed to validate.", e);
+		}
+		return null;
+	}
+
+	@Override
+	public ValidationReport validate(InputStreamSupplier input, Map<String, Object> options) {
 		try {
 			return ValidatorTask.validate(input,
 					false,

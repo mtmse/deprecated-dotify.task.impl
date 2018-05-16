@@ -11,6 +11,7 @@ import java.util.logging.Logger;
 
 import org.daisy.dotify.tasks.impl.input.ValidatorException;
 import org.daisy.dotify.tasks.impl.input.ValidatorTask;
+import org.daisy.streamline.api.media.InputStreamSupplier;
 import org.daisy.streamline.api.option.UserOption;
 import org.daisy.streamline.api.option.UserOptionValue;
 import org.daisy.streamline.api.validity.ValidationReport;
@@ -60,7 +61,26 @@ class PEFValidator implements Validator {
 
 	@Override
 	public ValidationReport validate(URL input, Map<String, Object> params) {
-		Mode mode = Optional.ofNullable(params.get(FEATURE_MODE))
+		try {
+			return ValidatorTask.validate(input, false, getMode(params).schemas);
+		} catch (ValidatorException e) {
+			logger.log(Level.WARNING, "Failed to validate.", e);
+		}
+		return null;
+	}
+	
+	@Override
+	public ValidationReport validate(InputStreamSupplier input, Map<String, Object> options) {
+		try {
+			return ValidatorTask.validate(input, false, getMode(options).schemas);
+		} catch (ValidatorException e) {
+			logger.log(Level.WARNING, "Failed to validate.", e);
+		}
+		return null;
+	}
+	
+	private static Mode getMode(Map<String, Object> params) {
+		return Optional.ofNullable(params.get(FEATURE_MODE))
 				.map(v-> {
 					try {
 						return Mode.valueOf(v.toString().toUpperCase());
@@ -69,17 +89,6 @@ class PEFValidator implements Validator {
 						return null;
 					}})
 				.orElse(Mode.FULL);
-		return validate(input, mode);
-	}
-	
-	private ValidationReport validate(URL input, Mode modeLocal) {
-		
-		try {
-			return ValidatorTask.validate(input, false, modeLocal.schemas);
-		} catch (ValidatorException e) {
-			logger.log(Level.WARNING, "Failed to validate.", e);
-		}
-		return null;
 	}
 
 	private List<UserOption> buildOptions() {
