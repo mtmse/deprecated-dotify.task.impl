@@ -40,6 +40,16 @@ public class XmlIdentifier implements Identifier {
 	 * Defines the property key for the root element attributes.
 	 */
 	public static final String ATTRIBUTES_KEY = "attributes";
+	
+	/**
+	 * Defines the property key for the public identifier.
+	 */
+	public static final String PUBLIC_ID_KEY = "publicId";
+
+	/**
+	 * Defines the property key for the system identifier.
+	 */
+	public static final String SYSTEM_ID_KEY = "systemId";
 
 	/**
 	 * Creates a new xml identifier instance.
@@ -63,6 +73,12 @@ public class XmlIdentifier implements Identifier {
 					.property(XMLNS_KEY, info.getUri())
 					.property(LOCAL_NAME_KEY, info.getLocalName())
 					.property(ATTRIBUTES_KEY, info.getAttributes());
+			if (info.getPublicId()!=null) {
+				ret.property(PUBLIC_ID_KEY, info.getPublicId());
+			}
+			if (info.getSystemId()!=null) {
+				ret.property(SYSTEM_ID_KEY, info.getSystemId());
+			}
 			if ("http://www.daisy.org/z3986/2005/dtbook/".equals(info.getUri())) {
 				ret.formatName("dtbook").extension("xml").mediaType("application/x-dtbook+xml");
 			} else if ("http://www.w3.org/1999/xhtml".equals(info.getUri())) {
@@ -97,6 +113,12 @@ public class XmlIdentifier implements Identifier {
 					.property(XMLNS_KEY, info.getUri())
 					.property(LOCAL_NAME_KEY, info.getLocalName())
 					.property(ATTRIBUTES_KEY, info.getAttributes());
+			if (info.getPublicId()!=null) {
+				details.property(PUBLIC_ID_KEY, info.getPublicId());
+			}
+			if (info.getSystemId()!=null) {
+				details.property(SYSTEM_ID_KEY, info.getSystemId());
+			}
 			if ("http://www.daisy.org/z3986/2005/dtbook/".equals(info.getUri())) {
 				details.formatName("dtbook").extension("xml").mediaType("application/x-dtbook+xml");
 			} else if ("http://www.w3.org/1999/xhtml".equals(info.getUri())) {
