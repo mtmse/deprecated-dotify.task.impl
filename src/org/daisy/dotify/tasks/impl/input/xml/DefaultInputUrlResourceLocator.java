@@ -1,8 +1,6 @@
 package org.daisy.dotify.tasks.impl.input.xml;
 
-import java.io.IOException;
 import java.util.HashSet;
-import java.util.InvalidPropertiesFormatException;
 import java.util.Properties;
 import java.util.Set;
 
@@ -28,19 +26,9 @@ class DefaultInputUrlResourceLocator extends AbstractResourceLocator {
 	private synchronized void loadIfNotLoaded() throws ResourceLocatorException {
 		if (props==null) {
 			props = new Properties();
-			try {
-				props.loadFromXML(getResource("input_format_catalog.xml").openStream());
-			} catch (InvalidPropertiesFormatException e) {
-				throw new ResourceLocatorException();
-			} catch (IOException e) {
-				throw new ResourceLocatorException();
-			}
+			props.put("dtbook@http://www.daisy.org/z3986/2005/dtbook/", "dtbook.properties");
+			props.put("html@http://www.w3.org/1999/xhtml", "html.properties");
 		}
-	}
-
-	Properties getInputFormatCatalog() throws ResourceLocatorException {
-		loadIfNotLoaded();
-		return props;
 	}
 	
 	String getConfigFileName(String rootElement, String rootNS) throws ResourceLocatorException {
