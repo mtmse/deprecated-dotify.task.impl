@@ -35,45 +35,45 @@ enum DefaultInputUrlResourceLocator {
 		return INSTANCE;
 	}
 	
-	String getConfigFileName(String rootElement, String rootNS) {
+	private String getConfigFileName(String rootElement, String rootNS) {
 		if (rootNS!=null) {
 			return props.get(rootElement+"@"+rootNS);
 		} else {
 			return props.get(rootElement);
 		}
 	}
-	
-	List<InternalTask> getConfiguration(String rootElement, String rootNS, String template, Map<String, Object> xsltParams, ResourceLocator localLocator, ResourceLocator commonLocator) throws InternalTaskException {
-		return createTaskList(getConfigFileName(rootElement, rootNS), rootElement, rootNS, template, xsltParams, localLocator, commonLocator);
+
+	List<InternalTask> getConfiguration(XMLConfig config) throws InternalTaskException {
+		return createTaskList(getConfigFileName(config.getRootElement(), config.getRootNS()), config);
 	}
 	
-	static List<InternalTask> createTaskList(String inputformat, String rootElement, String rootNS, String template, Map<String, Object> xsltParams, ResourceLocator localLocator, ResourceLocator commonLocator) throws InternalTaskException {
+	private static List<InternalTask> createTaskList(String inputformat, XMLConfig config) throws InternalTaskException {
 		if (inputformat !=null && "".equals(inputformat)) {
 			return new ArrayList<>();
 		}
 		String xmlformat = "xml.properties";
-		String basePath = TEMPLATES_PATH + template + "/";
+		String basePath = TEMPLATES_PATH + config.getTemplate() + "/";
 		if (inputformat!=null) {
 			try {
-				return readConfiguration(rootElement, localLocator, basePath + inputformat, xsltParams);
+				return readConfiguration(config.getRootElement(), config.getLocalLocator(), basePath + inputformat, config.getXsltParams());
 			} catch (ResourceLocatorException e) {
 				logger.fine("Cannot find localized URL " + basePath + inputformat);
 			}
 		}
 		try {
-			return readConfiguration(rootElement, localLocator, basePath + xmlformat, xsltParams);
+			return readConfiguration(config.getRootElement(), config.getLocalLocator(), basePath + xmlformat, config.getXsltParams());
 		} catch (ResourceLocatorException e) {
 			logger.fine("Cannot find localized URL " + basePath + xmlformat);
 		}
 		if (inputformat!=null) {
 			try {
-				return readConfiguration(rootElement, commonLocator, basePath + inputformat, xsltParams);
+				return readConfiguration(config.getRootElement(), config.getCommonLocator(), basePath + inputformat, config.getXsltParams());
 			} catch (ResourceLocatorException e) {
 				logger.fine("Cannot find common URL " + basePath + inputformat);
 			}
 		}
 		try {
-			return readConfiguration(rootElement, commonLocator, basePath + xmlformat, xsltParams);
+			return readConfiguration(config.getRootElement(), config.getCommonLocator(), basePath + xmlformat, config.getXsltParams());
 		} catch (ResourceLocatorException e) {
 			logger.fine("Cannot find common URL " + basePath + xmlformat);
 		}

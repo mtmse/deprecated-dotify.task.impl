@@ -36,7 +36,7 @@ class XMLExpandingTask extends ExpandingTask {
 			String rootNS = String.valueOf(input.getProperties().get(XmlIdentifier.XMLNS_KEY));
 			String rootElement = String.valueOf(input.getProperties().get(XmlIdentifier.LOCAL_NAME_KEY));
 			
-			return DefaultInputUrlResourceLocator.getInstance().getConfiguration(rootElement, rootNS, template, xsltParams, localLocator, commonLocator);
+			return DefaultInputUrlResourceLocator.getInstance().getConfiguration(new XMLConfig(rootElement, rootNS, template, xsltParams, localLocator, commonLocator));
 		} catch (IdentificationFailedException e) {
 			throw new InternalTaskException("Failed to read input as xml", e);
 		}
