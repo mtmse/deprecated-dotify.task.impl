@@ -47,13 +47,13 @@ class XMLExpandingTask extends ExpandingTask {
 			String rootNS = String.valueOf(input.getProperties().get(XmlIdentifier.XMLNS_KEY));
 			String rootElement = String.valueOf(input.getProperties().get(XmlIdentifier.LOCAL_NAME_KEY));
 			
-			return getConfiguration(rootElement, rootNS);
+			return getConfiguration(rootElement, rootNS, template, xsltParams, localLocator, commonLocator);
 		} catch (IdentificationFailedException e) {
 			throw new InternalTaskException("Failed to read input as xml", e);
 		}
 	}
 	
-	private List<InternalTask> getConfiguration(String rootElement, String rootNS) throws InternalTaskException {
+	private static List<InternalTask> getConfiguration(String rootElement, String rootNS, String template, Map<String, Object> xsltParams, ResourceLocator localLocator, ResourceLocator commonLocator) throws InternalTaskException {
 		String inputformat = DefaultInputUrlResourceLocator.getInstance().getConfigFileName(rootElement, rootNS);
 		if (inputformat !=null && "".equals(inputformat)) {
 			return new ArrayList<>();
@@ -62,32 +62,32 @@ class XMLExpandingTask extends ExpandingTask {
 		String basePath = TEMPLATES_PATH + template + "/";
 		if (inputformat!=null) {
 			try {
-				return readConfiguration(rootElement, localLocator, basePath + inputformat);
+				return readConfiguration(rootElement, localLocator, basePath + inputformat, xsltParams);
 			} catch (ResourceLocatorException e) {
 				logger.fine("Cannot find localized URL " + basePath + inputformat);
 			}
 		}
 		try {
-			return readConfiguration(rootElement, localLocator, basePath + xmlformat);
+			return readConfiguration(rootElement, localLocator, basePath + xmlformat, xsltParams);
 		} catch (ResourceLocatorException e) {
 			logger.fine("Cannot find localized URL " + basePath + xmlformat);
 		}
 		if (inputformat!=null) {
 			try {
-				return readConfiguration(rootElement, commonLocator, basePath + inputformat);
+				return readConfiguration(rootElement, commonLocator, basePath + inputformat, xsltParams);
 			} catch (ResourceLocatorException e) {
 				logger.fine("Cannot find common URL " + basePath + inputformat);
 			}
 		}
 		try {
-			return readConfiguration(rootElement, commonLocator, basePath + xmlformat);
+			return readConfiguration(rootElement, commonLocator, basePath + xmlformat, xsltParams);
 		} catch (ResourceLocatorException e) {
 			logger.fine("Cannot find common URL " + basePath + xmlformat);
 		}
 		throw new InternalTaskException("Unable to open a configuration stream for the format.");
 	}
 	
-	private List<InternalTask> readConfiguration(String type, ResourceLocator locator, String path) throws InternalTaskException, ResourceLocatorException {
+	private static List<InternalTask> readConfiguration(String type, ResourceLocator locator, String path, Map<String, Object> xsltParams) throws InternalTaskException, ResourceLocatorException {
 		URL t = locator.getResource(path);
 		List<InternalTask> setup = new ArrayList<>();				
 		try {
@@ -100,7 +100,7 @@ class XMLExpandingTask extends ExpandingTask {
 				throw new ResourceLocatorException("Cannot open stream");
 			}
 			addValidationTask(type, removeSchemas(pa, "validation"), setup, locator);
-			addXsltTask(type, removeSchemas(pa, "transformation"), setup, locator); 
+			addXsltTask(type, removeSchemas(pa, "transformation"), setup, locator, xsltParams); 
 			for (Object key : pa.keySet()) {
 				logger.info("Unrecognized key: " + key);							
 			}
@@ -117,7 +117,7 @@ class XMLExpandingTask extends ExpandingTask {
 		return resolve(new DefaultAnnotatedFile.Builder(input).build());
 	}
 	
-	private void addValidationTask(String type, String[] schemas, List<InternalTask> setup, ResourceLocator locator) throws ResourceLocatorException {
+	private static void addValidationTask(String type, String[] schemas, List<InternalTask> setup, ResourceLocator locator) throws ResourceLocatorException {
 		if (schemas!=null) {
 			for (String s : schemas) {
 				if (s!=null && !s.equals("")) {
@@ -127,7 +127,7 @@ class XMLExpandingTask extends ExpandingTask {
 		} 
 	}
 	
-	private void addXsltTask(String type, String[] schemas, List<InternalTask> setup, ResourceLocator locator) throws ResourceLocatorException {
+	private static void addXsltTask(String type, String[] schemas, List<InternalTask> setup, ResourceLocator locator, Map<String, Object> xsltParams) throws ResourceLocatorException {
 		if (schemas!=null) {
 			for (String s : schemas) {
 				if (s!=null && s!="") {
@@ -136,7 +136,7 @@ class XMLExpandingTask extends ExpandingTask {
 			}
 		}
 	}
-	private String[] removeSchemas(Properties p, String key) {
+	private static String[] removeSchemas(Properties p, String key) {
 		Object o = p.remove(key);
 		String value = (o instanceof String) ? (String)o : null;
 		if (value==null) {
