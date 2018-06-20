@@ -161,20 +161,18 @@ public class XMLInputManager implements TaskGroup {
 				}
 				String rootNS = String.valueOf(input.getProperties().get(XmlIdentifier.XMLNS_KEY));
 				String rootElement = String.valueOf(input.getProperties().get(XmlIdentifier.LOCAL_NAME_KEY));
-				DefaultInputUrlResourceLocator p = DefaultInputUrlResourceLocator.getInstance();
-
-				String inputformat = p.getConfigFileName(rootElement, rootNS);
-				if (inputformat !=null && "".equals(inputformat)) {
-					return new ArrayList<>();
-				}
-				return getConfiguration(inputformat, rootElement);
-
+				
+				return getConfiguration(rootElement, rootNS);
 			} catch (IdentificationFailedException e) {
 				throw new InternalTaskException("Failed to read input as xml", e);
 			}
 		}
 		
-		private List<InternalTask> getConfiguration(String inputformat, String rootElement) throws InternalTaskException {
+		private List<InternalTask> getConfiguration(String rootElement, String rootNS) throws InternalTaskException {
+			String inputformat = DefaultInputUrlResourceLocator.getInstance().getConfigFileName(rootElement, rootNS);
+			if (inputformat !=null && "".equals(inputformat)) {
+				return new ArrayList<>();
+			}
 			String xmlformat = "xml.properties";
 			String basePath = TEMPLATES_PATH + template + "/";
 			if (inputformat!=null) {
