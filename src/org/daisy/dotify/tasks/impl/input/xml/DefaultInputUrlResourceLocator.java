@@ -1,9 +1,9 @@
 package org.daisy.dotify.tasks.impl.input.xml;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 enum DefaultInputUrlResourceLocator {
 	INSTANCE;
@@ -28,16 +28,14 @@ enum DefaultInputUrlResourceLocator {
 	}
 
 	Set<String> listFileFormats() {
-		Set<String> ret = new HashSet<>();
-		for (String s : props.keySet()) {
+		return props.keySet().stream().map(s->{
 			int inx;
 			if ((inx = s.indexOf('@')) > -1) {
-				ret.add(s.substring(0, inx));
+				return s.substring(0, inx);
 			} else {
-				ret.add(s);
+				return s;
 			}
-		}
-		return ret;
+		}).collect(Collectors.toSet());
 	}
 
 }
