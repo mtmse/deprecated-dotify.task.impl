@@ -44,10 +44,15 @@ enum XMLTaskListFactory {
 	}
 
 	List<InternalTask> createTaskList(XMLConfig config) throws InternalTaskException {
-		return createTaskList(getConfigFileName(config.getRootElement(), config.getRootNS()), config);
+		try {
+			return createTaskList(getConfigFileName(config.getRootElement(), config.getRootNS()), config);
+		} catch (TaskCreationException e) {
+			// Wrap in checked exception
+			throw new InternalTaskException(e);
+		}
 	}
 	
-	private static List<InternalTask> createTaskList(String inputformat, XMLConfig config) throws InternalTaskException {
+	private static List<InternalTask> createTaskList(String inputformat, XMLConfig config) throws TaskCreationException {
 		if (inputformat !=null && "".equals(inputformat)) {
 			return new ArrayList<>();
 		}
@@ -77,10 +82,10 @@ enum XMLTaskListFactory {
 		} catch (ResourceLocatorException e) {
 			logger.fine("Cannot find common URL " + basePath + xmlformat);
 		}
-		throw new InternalTaskException("Unable to open a configuration stream for the format.");
+		throw new TaskCreationException("Unable to open a configuration stream for the format.");
 	}
 	
-	private static List<InternalTask> readConfiguration(String type, ResourceLocator locator, String path, Map<String, Object> xsltParams) throws InternalTaskException, ResourceLocatorException {
+	private static List<InternalTask> readConfiguration(String type, ResourceLocator locator, String path, Map<String, Object> xsltParams) throws TaskCreationException, ResourceLocatorException {
 		URL t = locator.getResource(path);
 		List<InternalTask> setup = new ArrayList<>();				
 		try {
@@ -98,7 +103,7 @@ enum XMLTaskListFactory {
 				logger.info("Unrecognized key: " + key);							
 			}
 		} catch (IOException e) {
-			throw new InternalTaskException("Unable to open settings file.", e);
+			throw new TaskCreationException("Unable to open settings file.", e);
 		}
 		
 		return setup;
