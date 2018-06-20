@@ -19,19 +19,19 @@ import org.daisy.dotify.tasks.tools.XsltTask;
 import org.daisy.streamline.api.tasks.InternalTask;
 import org.daisy.streamline.api.tasks.InternalTaskException;
 
-enum DefaultInputUrlResourceLocator {
+enum XMLTaskListFactory {
 	INSTANCE;
-	private static final Logger logger = Logger.getLogger(DefaultInputUrlResourceLocator.class.getCanonicalName());
+	private static final Logger logger = Logger.getLogger(XMLTaskListFactory.class.getCanonicalName());
 	private static final String TEMPLATES_PATH = "templates/";
 	private Map<String, String> props;
 
-	private DefaultInputUrlResourceLocator() {
+	private XMLTaskListFactory() {
 		props = new HashMap<>();
 		props.put("dtbook@http://www.daisy.org/z3986/2005/dtbook/", "dtbook.properties");
 		props.put("html@http://www.w3.org/1999/xhtml", "html.properties");
 	}
 
-	static DefaultInputUrlResourceLocator getInstance() {
+	static XMLTaskListFactory getInstance() {
 		return INSTANCE;
 	}
 	
@@ -43,7 +43,7 @@ enum DefaultInputUrlResourceLocator {
 		}
 	}
 
-	List<InternalTask> getConfiguration(XMLConfig config) throws InternalTaskException {
+	List<InternalTask> createTaskList(XMLConfig config) throws InternalTaskException {
 		return createTaskList(getConfigFileName(config.getRootElement(), config.getRootNS()), config);
 	}
 	

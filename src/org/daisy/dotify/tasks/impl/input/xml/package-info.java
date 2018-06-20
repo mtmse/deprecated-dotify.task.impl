@@ -32,7 +32,7 @@
  * 
  * <h3>Template selection</h3>
  * <p>The process of interpreting an input file format as OBFL is managed by 
- * {@link org.daisy.dotify.tasks.impl.input.xml.DefaultInputUrlResourceLocator}. This
+ * {@link org.daisy.dotify.tasks.impl.input.xml.XMLTaskListFactory}. This
  * class connects a root element and namespace with a filename. The location of this 
  * file is determined by the template. In other words, the properties file should be located
  *  in the "templates/[template]" folder of the localization base folder. The properties 
