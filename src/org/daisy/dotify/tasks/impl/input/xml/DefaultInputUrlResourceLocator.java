@@ -43,7 +43,11 @@ enum DefaultInputUrlResourceLocator {
 		}
 	}
 	
-	static List<InternalTask> getConfiguration(String inputformat, String rootElement, String rootNS, String template, Map<String, Object> xsltParams, ResourceLocator localLocator, ResourceLocator commonLocator) throws InternalTaskException {
+	List<InternalTask> getConfiguration(String rootElement, String rootNS, String template, Map<String, Object> xsltParams, ResourceLocator localLocator, ResourceLocator commonLocator) throws InternalTaskException {
+		return createTaskList(getConfigFileName(rootElement, rootNS), rootElement, rootNS, template, xsltParams, localLocator, commonLocator);
+	}
+	
+	static List<InternalTask> createTaskList(String inputformat, String rootElement, String rootNS, String template, Map<String, Object> xsltParams, ResourceLocator localLocator, ResourceLocator commonLocator) throws InternalTaskException {
 		if (inputformat !=null && "".equals(inputformat)) {
 			return new ArrayList<>();
 		}

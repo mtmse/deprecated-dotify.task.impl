@@ -1,20 +1,11 @@
 package org.daisy.dotify.tasks.impl.input.xml;
 
 import java.io.File;
-import java.io.IOException;
-import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.daisy.dotify.common.io.ResourceLocator;
-import org.daisy.dotify.common.io.ResourceLocatorException;
 import org.daisy.dotify.tasks.impl.identity.XmlIdentifier;
-import org.daisy.dotify.tasks.impl.input.ValidatorTask;
-import org.daisy.dotify.tasks.tools.XsltTask;
 import org.daisy.streamline.api.identity.IdentificationFailedException;
 import org.daisy.streamline.api.media.AnnotatedFile;
 import org.daisy.streamline.api.media.DefaultAnnotatedFile;
@@ -45,7 +36,7 @@ class XMLExpandingTask extends ExpandingTask {
 			String rootNS = String.valueOf(input.getProperties().get(XmlIdentifier.XMLNS_KEY));
 			String rootElement = String.valueOf(input.getProperties().get(XmlIdentifier.LOCAL_NAME_KEY));
 			
-			return DefaultInputUrlResourceLocator.getConfiguration(DefaultInputUrlResourceLocator.getInstance().getConfigFileName(rootElement, rootNS), rootElement, rootNS, template, xsltParams, localLocator, commonLocator);
+			return DefaultInputUrlResourceLocator.getInstance().getConfiguration(rootElement, rootNS, template, xsltParams, localLocator, commonLocator);
 		} catch (IdentificationFailedException e) {
 			throw new InternalTaskException("Failed to read input as xml", e);
 		}
