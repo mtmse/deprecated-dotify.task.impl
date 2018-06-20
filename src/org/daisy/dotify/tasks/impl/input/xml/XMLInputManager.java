@@ -171,10 +171,8 @@ public class XMLInputManager implements TaskGroup {
 				}
 			} catch (IdentificationFailedException e) {
 				throw new InternalTaskException("Failed to read input as xml", e);
-			} catch (IOException e) {
-				throw new InternalTaskException("IOException while reading input", e);
 			}
-			
+
 			String xmlformat = "xml.properties";
 			String basePath = TEMPLATES_PATH + template + "/";
 			if (inputformat!=null) {
