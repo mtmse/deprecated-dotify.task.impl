@@ -155,24 +155,26 @@ public class XMLInputManager implements TaskGroup {
 
 		@Override
 		public List<InternalTask> resolve(AnnotatedFile input) throws InternalTaskException {
-			String inputformat = null;
-			String rootElement = null;
 			try {
 				if (!input.getProperties().containsKey(XmlIdentifier.LOCAL_NAME_KEY) || !input.getProperties().containsKey(XmlIdentifier.XMLNS_KEY)) {
 					 input = new XmlIdentifier().identify(input);
 				}
 				String rootNS = String.valueOf(input.getProperties().get(XmlIdentifier.XMLNS_KEY));
-				rootElement = String.valueOf(input.getProperties().get(XmlIdentifier.LOCAL_NAME_KEY));
+				String rootElement = String.valueOf(input.getProperties().get(XmlIdentifier.LOCAL_NAME_KEY));
 				DefaultInputUrlResourceLocator p = DefaultInputUrlResourceLocator.getInstance();
 
-				inputformat = p.getConfigFileName(rootElement, rootNS);
+				String inputformat = p.getConfigFileName(rootElement, rootNS);
 				if (inputformat !=null && "".equals(inputformat)) {
 					return new ArrayList<>();
 				}
+				return getConfiguration(inputformat, rootElement);
+
 			} catch (IdentificationFailedException e) {
 				throw new InternalTaskException("Failed to read input as xml", e);
 			}
-
+		}
+		
+		private List<InternalTask> getConfiguration(String inputformat, String rootElement) throws InternalTaskException {
 			String xmlformat = "xml.properties";
 			String basePath = TEMPLATES_PATH + template + "/";
 			if (inputformat!=null) {
