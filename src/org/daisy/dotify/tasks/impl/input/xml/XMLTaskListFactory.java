@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -23,19 +24,19 @@ enum XMLTaskListFactory {
 	INSTANCE;
 	private static final Logger logger = Logger.getLogger(XMLTaskListFactory.class.getCanonicalName());
 	private static final String TEMPLATES_PATH = "templates/";
-	private Map<String, String> props;
+	private Map<String, Function<XMLConfig, List<InternalTask>>> props;
 
 	private XMLTaskListFactory() {
 		props = new HashMap<>();
-		props.put("dtbook@http://www.daisy.org/z3986/2005/dtbook/", "dtbook.properties");
-		props.put("html@http://www.w3.org/1999/xhtml", "html.properties");
+		props.put("dtbook@http://www.daisy.org/z3986/2005/dtbook/", conf->createTaskList("dtbook.properties", conf));
+		props.put("html@http://www.w3.org/1999/xhtml", conf->createTaskList("html.properties", conf));
 	}
 
 	static XMLTaskListFactory getInstance() {
 		return INSTANCE;
 	}
 	
-	private String getConfigFileName(String rootElement, String rootNS) {
+	private Function<XMLConfig, List<InternalTask>> getConfigFileName(String rootElement, String rootNS) {
 		if (rootNS!=null) {
 			return props.get(rootElement+"@"+rootNS);
 		} else {
@@ -45,7 +46,13 @@ enum XMLTaskListFactory {
 
 	List<InternalTask> createTaskList(XMLConfig config) throws InternalTaskException {
 		try {
-			return createTaskList(getConfigFileName(config.getRootElement(), config.getRootNS()), config);
+			Function<XMLConfig, List<InternalTask>> func = getConfigFileName(config.getRootElement(), config.getRootNS());
+			if (func!=null) {
+				return func.apply(config);
+			} else {
+				// Generic XML support
+				return createTaskList(null, config);
+			}
 		} catch (TaskCreationException e) {
 			// Wrap in checked exception
 			throw new InternalTaskException(e);
