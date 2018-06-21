@@ -31,9 +31,9 @@
  * input transformations in this package.</p>
  * 
  * <h3>Template selection</h3>
- * <p>The process of interpreting an input file format as OBFL is managed by a properties 
- * file which must be named as indicated by the input_format_catalog.xml. The input format
- * catalog connects a root element and namespace with a filename. The location of this 
+ * <p>The process of interpreting an input file format as OBFL is managed by 
+ * {@link org.daisy.dotify.tasks.impl.input.xml.XMLTaskListFactory}. This
+ * class connects a root element and namespace with a filename. The location of this 
  * file is determined by the template. In other words, the properties file should be located
  *  in the "templates/[template]" folder of the localization base folder. The properties 
  * file should contain two entries: transformation and validation, pointing to the xslt 

@@ -36,7 +36,7 @@ public class XMLInputManagerFactory implements TaskGroupFactory {
 	 */
 	public XMLInputManagerFactory() {
 		this.locator = XMLL10nResourceLocator.getInstance();
-		DefaultInputUrlResourceLocator p = DefaultInputUrlResourceLocator.getInstance();
+		XMLTaskListFactory p = XMLTaskListFactory.getInstance();
 		Set<String> supportedFormats = p.listFileFormats();
 		supportedFormats.add("xml");
 		supportedSpecifications = new HashSet<>();
