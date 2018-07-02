@@ -20,7 +20,8 @@
 			dotify:values="true/false"
 			dotify:default="true"/>
 	<xsl:param name="volume-break-transition" select="'none'" dotify:desc="Volume break transition range. Within the range, text may be moved to the following volume." dotify:default="none" dotify:values="none/page/sheet"/>
-
+	<xsl:param name="l10ntable" select="'Table'"/>
+	
 	<xsl:key name="noterefs" match="html:a[epub:noteref(.)]" use="substring-after(@href, '#')"/>
 
 	<xsl:variable name="footnotesInFrontmatter" select="
@@ -414,6 +415,16 @@
 
 	<xsl:template match="html:sub | html:sup" mode="inline-mode">
 		<xsl:call-template name="applyFlatStyle"/>
+	</xsl:template>
+	
+	<xsl:template match="html:table">
+		<xml-data renderer="table-renderer" xmlns:dotify="http://brailleapps.github.io/ns/dotify">
+			<dotify:node>
+				<block keep="page" keep-with-next="1"><xsl:value-of select="concat('== ', $l10ntable, ' ')"/><leader position="100%" pattern="="/></block>
+				<xsl:next-match/>
+				<block><leader align="right" position="100%" pattern="="/></block>
+			</dotify:node>
+		</xml-data>
 	</xsl:template>
 	
 	<!-- Remove title page if set to remove -->

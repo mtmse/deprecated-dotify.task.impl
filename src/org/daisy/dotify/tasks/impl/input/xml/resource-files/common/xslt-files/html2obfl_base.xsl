@@ -160,7 +160,8 @@
 	</xsl:function>
 	
 	<xsl:template match="html:table">
-		<table table-col-spacing="1">
+		<xsl:apply-templates select="html:caption"/>
+		<table table-col-spacing="2">
 			<xsl:choose>
 				<xsl:when test="html:thead"> 
 					<thead>
@@ -181,6 +182,7 @@
 				</xsl:otherwise>
 			</xsl:choose>
 		</table>
+		<xsl:apply-templates select="descendant::html:*[@epub:type='pagebreak']"/>
 	</xsl:template>
 	
 	<xsl:template match="html:tr" mode="matrixRow">
@@ -197,7 +199,7 @@
 			<xsl:if test="@rowspan">
 				<xsl:attribute name="row-span" select="@rowspan"/>
 			</xsl:if>
-			<xsl:apply-templates/>
+			<xsl:apply-templates select="node()[not(self::html:*[@epub:type='pagebreak'])]"/>
 		</td>
 	</xsl:template>
 <!-- / special -->
