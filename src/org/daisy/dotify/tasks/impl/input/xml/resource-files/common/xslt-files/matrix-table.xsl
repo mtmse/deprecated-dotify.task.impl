@@ -5,7 +5,7 @@
 	xmlns:aobfl="http://www.daisy.org/ns/2011/obfl"
 	exclude-result-prefixes="axs dotify">
 
-	<xsl:import href="dtbook_table_grid.xsl"/>
+	<xsl:import href="split-table.xsl"/>
 	<xsl:param name="rowspanName" select="'row-span'" as="axs:string"/>
 	<xsl:param name="colspanName" select="'col-span'" as="axs:string"/>
 	<xsl:param name="table-split-columns" select="8"/>

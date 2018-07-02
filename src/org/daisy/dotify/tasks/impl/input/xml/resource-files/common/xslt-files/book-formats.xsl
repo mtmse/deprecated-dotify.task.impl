@@ -417,8 +417,8 @@
 	</xsl:function>
 	
 	<xsl:function name="obfl:insertProcessorRenderer">
-		<file-reference uri="dtbook_table_grid.xsl">
-			<xsl:copy-of select="document('dtbook_table_grid.xsl')"/>
+		<file-reference uri="split-table.xsl">
+			<xsl:copy-of select="document('split-table.xsl')"/>
 		</file-reference>
 		<xml-processor name="staircase">
 			<xsl:copy-of select="document('staircase-table.xsl')"/>

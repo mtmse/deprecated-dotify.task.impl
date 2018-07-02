@@ -6,7 +6,7 @@
 	xmlns:tmp="http://brailleapps.github.io/ns/dotify/result"
 	exclude-result-prefixes="dotify tmp">
 
-	<xsl:import href="dtbook_table_grid.xsl"/>
+	<xsl:import href="split-table.xsl"/>
 	<xsl:param name="debug" select="false()" as="axs:boolean"/>
 	<xsl:param name="rowspanName" select="'row-span'" as="axs:string"/>
 	<xsl:param name="colspanName" select="'col-span'" as="axs:string"/>
