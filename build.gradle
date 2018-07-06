@@ -46,7 +46,7 @@ dependencies {
 	compile (group: 'org.daisy.libs', name: 'saxon-he', version: '9.5.1.5') {
 		exclude module: 'Saxon-HE'
 	}
-	testCompile group: "junit", name: "junit", version: "4.7"
+	testCompile group: "junit", name: "junit", version: "4.12"
 	testCompile ('org.daisy.braille:braille-utils.pef-tools:3.0.0') {
 		exclude module: 'Saxon-HE'
 	}
@@ -66,7 +66,8 @@ bundle {
         'Built-By': System.getProperty("user.name"),
         'Built-On': new Date().format('yyyy-MM-dd'),
         'Repository-Revision': "$repoRevision",
-        'Repository-URL': "$repositoryURL"
+        'Repository-URL': "$repositoryURL",
+		'Include-Resource': 'LICENSE, NOTICE'
     ]
 }
 
