@@ -47,7 +47,7 @@ dependencies {
 		exclude module: 'Saxon-HE'
 	}
 	testCompile group: "junit", name: "junit", version: "4.12"
-	testCompile ('org.daisy.braille:braille-utils.pef-tools:4.0.0') {
+	testCompile ('org.daisy.braille:braille-utils.pef-tools:5.0.0') {
 		exclude module: 'Saxon-HE'
 	}
 	testCompile 'org.daisy.streamline:streamline-engine:1.2.0'
