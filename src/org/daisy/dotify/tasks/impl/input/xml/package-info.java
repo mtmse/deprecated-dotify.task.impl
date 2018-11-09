@@ -14,7 +14,7 @@
  * with a base folder for the input system. This folder will be used when looking for
  * file references for that locale. Note that:</p>
  * <ul><li>The base folder in the localization catalog is relative to the 
- * <tt>XMLInputManagerFactory</tt> class.</li>
+ * <code>XMLInputManagerFactory</code> class.</li>
  * <li><b>An entry in the localization catalog is 
  * required for a locale to be supported.</b> However, no files are required to be localized.</li>
  * </ul>
