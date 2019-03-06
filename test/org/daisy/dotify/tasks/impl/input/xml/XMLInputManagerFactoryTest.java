@@ -54,7 +54,7 @@ public class XMLInputManagerFactoryTest {
 	public void testLocateInputManagerForUnknownLocale() {
 		//Setup
 		XMLInputManagerFactory factory = new XMLInputManagerFactory();
-		FilterLocale filter = FilterLocale.parse("fi");
+		FilterLocale filter = FilterLocale.parse("und");
 		
 		//Test
 		assertTrue(factory.newTaskGroup(new TaskGroupSpecification.Builder(FormatIdentifier.with("xml"), FormatIdentifier.with("obfl"), filter.toString()).build())!=null);

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+	<comment>Localization keys for Finnish</comment>
+
+	<!--
+		The value of this key is not presented to the user, 
+		instead it informs the consumer of this file which language it is in.
+		Perhaps a bit redundant as that information must already be available
+		somewhere for the file to be selected, but it will do for now.
+	-->
+	<entry key="l10nLang">fi</entry>
+		
+	<entry key="l10nrearjacketcopy">Rear jacket copy</entry>
+	<entry key="l10nimagedescription">Image description</entry>
+	<entry key="l10ncolophon">Colophon</entry>
+	<entry key="l10ncaption">Caption</entry>
+	<entry key="l10ntable">Table</entry>
+	<entry key="l10ntablepart">Table part</entry>
+	<entry key="l10nTocHeadline">Table Of Contents</entry>
+	<entry key="l10nTocDescription"></entry>
+
+	<entry key="l10nTocVolumeStart">Volume {0}</entry>
+	<entry key="l10nTocVolumeHeading">Contents of Volume {0}</entry>
+	<entry key="l10nTocVolumeXofY">Volume {0} of {1}</entry>
+	<entry key="l10nTocOneVolume">One Volume</entry>
+	<entry key="l10nEndnotesHeading">Footnotes</entry>
+	<entry key="l10nEndnotesPageStart">Page {0}</entry>
+	<entry key="l10nEndnotesPageHeader">Footnotes</entry>
+	
+	<entry key="l10nSequenceInterruptedMsg">Continues in the next volume.</entry>
+	
+	<entry key="l10nInstructionsHeading">To the reader</entry>
+
+</properties>

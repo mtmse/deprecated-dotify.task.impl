@@ -15,5 +15,7 @@
 	<entry key="de-DE">resource-files/de-DE</entry>
 	<entry key="da">resource-files/da-DK</entry>
 	<entry key="da-DK">resource-files/da-DK</entry>
+	<entry key="fi">resource-files/fi-FI</entry>
+	<entry key="fi-FI">resource-files/fi-FI</entry>
 
 </properties>
