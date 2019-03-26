@@ -3,6 +3,7 @@ package org.daisy.dotify.tasks.impl.input.xml;
 import java.io.File;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.daisy.dotify.common.io.ResourceLocator;
 import org.daisy.dotify.tasks.impl.identity.XmlIdentifier;
@@ -14,12 +15,12 @@ import org.daisy.streamline.api.tasks.InternalTask;
 import org.daisy.streamline.api.tasks.InternalTaskException;
 
 class XMLExpandingTask extends ExpandingTask {
-	private final ResourceLocator localLocator;
+	private final Optional<ResourceLocator> localLocator;
 	private final ResourceLocator commonLocator;
 	private final String template;
 	private final Map<String, Object> xsltParams;
 
-	XMLExpandingTask(String template, Map<String, Object> xsltParams, ResourceLocator localLocator, ResourceLocator commonLocator) {
+	XMLExpandingTask(String template, Map<String, Object> xsltParams, Optional<ResourceLocator> localLocator, ResourceLocator commonLocator) {
 		super("XML Tasks Bundle");
 		this.localLocator = localLocator;
 		this.commonLocator = commonLocator;

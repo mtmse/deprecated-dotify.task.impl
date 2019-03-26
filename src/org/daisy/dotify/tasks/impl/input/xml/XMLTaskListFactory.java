@@ -65,17 +65,19 @@ enum XMLTaskListFactory {
 		}
 		String xmlformat = "xml.properties";
 		String basePath = TEMPLATES_PATH + config.getTemplate() + "/";
-		if (inputformat!=null) {
-			try {
-				return readConfiguration(config.getRootElement(), config.getLocalLocator(), basePath + inputformat, config.getXsltParams());
-			} catch (ResourceLocatorException e) {
-				logger.fine("Cannot find localized URL " + basePath + inputformat);
+		if (config.getLocalLocator().isPresent()) {
+			if (inputformat!=null) {
+				try {
+					return readConfiguration(config.getRootElement(), config.getLocalLocator().get(), basePath + inputformat, config.getXsltParams());
+				} catch (ResourceLocatorException e) {
+					logger.fine("Cannot find localized URL " + basePath + inputformat);
+				}
 			}
-		}
-		try {
-			return readConfiguration(config.getRootElement(), config.getLocalLocator(), basePath + xmlformat, config.getXsltParams());
-		} catch (ResourceLocatorException e) {
-			logger.fine("Cannot find localized URL " + basePath + xmlformat);
+			try {
+				return readConfiguration(config.getRootElement(), config.getLocalLocator().get(), basePath + xmlformat, config.getXsltParams());
+			} catch (ResourceLocatorException e) {
+				logger.fine("Cannot find localized URL " + basePath + xmlformat);
+			}
 		}
 		if (inputformat!=null) {
 			try {

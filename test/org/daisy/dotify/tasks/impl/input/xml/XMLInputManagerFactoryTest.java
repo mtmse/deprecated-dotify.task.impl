@@ -50,7 +50,7 @@ public class XMLInputManagerFactoryTest {
 		assertTrue(factory.newInputManager(filter)!=null);
 	}
 	*/
-	@Test (expected=IllegalArgumentException.class)
+	@Test
 	public void testLocateInputManagerForUnknownLocale() {
 		//Setup
 		XMLInputManagerFactory factory = new XMLInputManagerFactory();

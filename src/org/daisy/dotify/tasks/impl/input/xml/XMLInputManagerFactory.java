@@ -5,7 +5,6 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Logger;
 
-import org.daisy.streamline.api.media.FormatIdentifier;
 import org.daisy.streamline.api.tasks.TaskGroup;
 import org.daisy.streamline.api.tasks.TaskGroupFactory;
 import org.daisy.streamline.api.tasks.TaskGroupInformation;
@@ -27,9 +26,7 @@ public class XMLInputManagerFactory implements TaskGroupFactory {
 	private static final Logger logger = Logger.getLogger(XMLInputManagerFactory.class.getCanonicalName());
 	private final XMLL10nResourceLocator locator;
 
-	private final Set<TaskGroupSpecification> supportedSpecifications;
 	private final Set<TaskGroupInformation> supportedTaskGroupInformations;
-	private final Set<String> supportedLocales;
 	
 	/**
 	 * Creates a new xml input manager factory.
@@ -39,17 +36,12 @@ public class XMLInputManagerFactory implements TaskGroupFactory {
 		XMLTaskListFactory p = XMLTaskListFactory.getInstance();
 		Set<String> supportedFormats = p.listFileFormats();
 		supportedFormats.add("xml");
-		supportedSpecifications = new HashSet<>();
-		this.supportedLocales = locator.listSupportedLocales();
 		Set<TaskGroupInformation> tmp = new HashSet<>();
 		for (String format : supportedFormats) {
 			if ("obfl".equals(format)) {
 				logger.info("Ignoring obfl.");
 			} else {
-				for (String locale : supportedLocales) {				
-					tmp.add(TaskGroupInformation.newConvertBuilder(format, "obfl").locale(locale).build());
-					supportedSpecifications.add(new TaskGroupSpecification.Builder(FormatIdentifier.with(format), FormatIdentifier.with("obfl"), locale).build());
-				}
+				tmp.add(TaskGroupInformation.newConvertBuilder(format, "obfl").build());
 			}
 		}
 		supportedTaskGroupInformations = Collections.unmodifiableSet(tmp);

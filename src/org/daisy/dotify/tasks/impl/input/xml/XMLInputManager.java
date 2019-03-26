@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.InvalidPropertiesFormatException;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -59,7 +60,7 @@ public class XMLInputManager implements TaskGroup {
 	private static final String TEMPLATE_KEY = "template";
 	static final String PROCESS_EDITING_INSTRUCTIONS = "process-editing-instructions";
 	private static final String LOCALIZATION_PROPS = "localization.xml";
-	private final ResourceLocator localLocator;
+	private final Optional<ResourceLocator> localLocator;
 	private final ResourceLocator commonLocator;
 	private final String name;
 	private final Logger logger;
@@ -69,7 +70,7 @@ public class XMLInputManager implements TaskGroup {
 	 * @param localLocator a locator for local resources
 	 * @param commonLocator a locator for common resources
 	 */
-	public XMLInputManager(ResourceLocator localLocator, ResourceLocator commonLocator) {
+	public XMLInputManager(Optional<ResourceLocator> localLocator, ResourceLocator commonLocator) {
 		this(localLocator, commonLocator, "XMLInputManager");
 	}
 	
@@ -79,7 +80,7 @@ public class XMLInputManager implements TaskGroup {
 	 * @param commonLocator a locator for common resources
 	 * @param name a name for the task group
 	 */
-	public XMLInputManager(ResourceLocator localLocator, ResourceLocator commonLocator, String name) {
+	public XMLInputManager(Optional<ResourceLocator> localLocator, ResourceLocator commonLocator, String name) {
 		this.localLocator = localLocator;
 		this.commonLocator = commonLocator;
 		this.name = name;
@@ -120,10 +121,10 @@ public class XMLInputManager implements TaskGroup {
 	
 	private Map<String, Object> makeXSLTParams(Map<String, Object> parameters) {
 		Map<String, Object> xsltParams = new HashMap<>();
-		{
+		if (localLocator.isPresent()) {
 			Properties p2 = new Properties();
 			try {
-				p2.loadFromXML(localLocator.getResource(LOCALIZATION_PROPS).openStream());
+				p2.loadFromXML(localLocator.get().getResource(LOCALIZATION_PROPS).openStream());
 			} catch (InvalidPropertiesFormatException e) {
 				logger.log(Level.FINE, "", e);
 			} catch (ResourceLocatorException e) {

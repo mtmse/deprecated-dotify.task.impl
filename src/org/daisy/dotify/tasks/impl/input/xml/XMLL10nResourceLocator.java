@@ -3,6 +3,7 @@ package org.daisy.dotify.tasks.impl.input.xml;
 import java.io.IOException;
 import java.net.URL;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.Set;
 import java.util.logging.Level;
@@ -21,6 +22,7 @@ public enum XMLL10nResourceLocator {
 	 * The instance 
 	 */
 	INSTANCE;
+	private static final Logger logger = Logger.getLogger(XMLL10nResourceLocator.class.getCanonicalName());
 	private final Properties locales;
 	
 	private XMLL10nResourceLocator() {
@@ -66,13 +68,14 @@ public enum XMLL10nResourceLocator {
 	 * @return returns a resource locator
 	 * @throws IllegalArgumentException if the locale is not supported
 	 */
-	public ResourceLocator getResourceLocator(String locale) {
+	public Optional<ResourceLocator> getResourceLocator(String locale) {
 		String languageFileRelativePath = locales.getProperty(locale);
-        if(languageFileRelativePath==null) {
-        	throw new IllegalArgumentException("Locale not supported: " + locale);
-        } else {
-        	return new InputLocalizationResourceLocator(languageFileRelativePath);
-        }
+		if(languageFileRelativePath==null) {
+			logger.warning(String.format("No content localization for '%s'. Using defaults.", locale));
+			return Optional.empty();
+		} else {
+			return Optional.of(new InputLocalizationResourceLocator(languageFileRelativePath));
+		}
 	}
 	
 	/**

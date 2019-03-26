@@ -1,18 +1,19 @@
 package org.daisy.dotify.tasks.impl.input.xml;
 
 import java.util.Map;
+import java.util.Optional;
 
 import org.daisy.dotify.common.io.ResourceLocator;
 
 class XMLConfig {
 	private final String rootElement;
 	private final String rootNS;
-	private final ResourceLocator localLocator;
+	private final Optional<ResourceLocator> localLocator;
 	private final ResourceLocator commonLocator;
 	private final String template;
 	private final Map<String, Object> xsltParams;
 
-	public XMLConfig(String rootElement, String rootNS, String template, Map<String, Object> xsltParams, ResourceLocator localLocator, ResourceLocator commonLocator) {
+	public XMLConfig(String rootElement, String rootNS, String template, Map<String, Object> xsltParams, Optional<ResourceLocator> localLocator, ResourceLocator commonLocator) {
 		this.rootElement = rootElement;
 		this.rootNS = rootNS;
 		this.localLocator = localLocator;
@@ -29,7 +30,7 @@ class XMLConfig {
 		return rootNS;
 	}
 
-	ResourceLocator getLocalLocator() {
+	Optional<ResourceLocator> getLocalLocator() {
 		return localLocator;
 	}
 
