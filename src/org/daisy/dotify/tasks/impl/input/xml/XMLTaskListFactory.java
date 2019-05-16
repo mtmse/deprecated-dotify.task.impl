@@ -24,12 +24,12 @@ enum XMLTaskListFactory {
 	INSTANCE;
 	private static final Logger logger = Logger.getLogger(XMLTaskListFactory.class.getCanonicalName());
 	private static final String TEMPLATES_PATH = "templates/";
-	private Map<String, Function<XMLConfig, List<InternalTask>>> props;
+	private Map<XMLKey, Function<XMLConfig, List<InternalTask>>> props;
 
 	private XMLTaskListFactory() {
 		props = new HashMap<>();
-		props.put("dtbook@http://www.daisy.org/z3986/2005/dtbook/", conf->createTaskList("dtbook.properties", conf));
-		props.put("html@http://www.w3.org/1999/xhtml", conf->createTaskList("html.properties", conf));
+		props.put(XMLKey.from("dtbook@http://www.daisy.org/z3986/2005/dtbook/", "dtbook"), conf->createTaskList("dtbook.properties", conf));
+		props.put(XMLKey.from("html@http://www.w3.org/1999/xhtml", "html"), conf->createTaskList("html.properties", conf));
 	}
 
 	static XMLTaskListFactory getInstance() {
@@ -38,9 +38,9 @@ enum XMLTaskListFactory {
 	
 	private Function<XMLConfig, List<InternalTask>> getConfigFileName(String rootElement, String rootNS) {
 		if (rootNS!=null) {
-			return props.get(rootElement+"@"+rootNS);
+			return props.get(XMLKey.from(rootElement+"@"+rootNS));
 		} else {
-			return props.get(rootElement);
+			return props.get(XMLKey.from(rootElement));
 		}
 	}
 
@@ -148,14 +148,9 @@ enum XMLTaskListFactory {
 	}
 
 	Set<String> listFileFormats() {
-		return props.keySet().stream().map(s->{
-			int inx;
-			if ((inx = s.indexOf('@')) > -1) {
-				return s.substring(0, inx);
-			} else {
-				return s;
-			}
-		}).collect(Collectors.toSet());
+		return props.keySet().stream()
+				.map(s->s.getFormatName())
+				.collect(Collectors.toSet());
 	}
 
 }
