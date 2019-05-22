@@ -83,7 +83,6 @@
 				</xsl:copy>
 			</xsl:when>
 			<xsl:otherwise>
-				<xsl:message select="@href"></xsl:message>
 				<xsl:copy>
 					 <xsl:copy-of select="@*"/>
 					 <xsl:apply-templates mode="html"/>
