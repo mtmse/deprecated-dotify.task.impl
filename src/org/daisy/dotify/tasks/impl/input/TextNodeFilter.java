@@ -23,6 +23,7 @@ import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.events.Characters;
 
 import org.daisy.dotify.common.text.StringFilter;
+import org.daisy.dotify.common.xml.StaxFilter;
 
 /**
  * 
@@ -32,7 +33,7 @@ import org.daisy.dotify.common.text.StringFilter;
  * @version 4 maj 2009
  * @since 1.0
  */
-public class TextNodeFilter extends StaxFilter2 {
+public class TextNodeFilter extends StaxFilter {
 	private StringFilter filters;
 
 	/**
