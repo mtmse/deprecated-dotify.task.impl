@@ -31,6 +31,7 @@ import org.daisy.streamline.api.tasks.ReadWriteTask;
  * @version 4 maj 2009
  * @since 1.0
  */
+@Deprecated
 public class XsltTask extends ReadWriteTask {
 	private static final Logger logger = Logger.getLogger(XsltTask.class.getCanonicalName());
 	final URL url;

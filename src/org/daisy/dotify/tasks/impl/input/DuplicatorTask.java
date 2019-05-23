@@ -17,6 +17,7 @@ import org.daisy.streamline.api.tasks.ReadOnlyTask;
  * 
  * @author Joel Håkansson
  */
+@Deprecated
 public class DuplicatorTask extends ReadOnlyTask {
 	private final File copy;
 	
