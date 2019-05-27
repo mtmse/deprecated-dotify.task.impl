@@ -17,12 +17,13 @@
 		</sch:rule>
 	</sch:pattern>
 	-->
-	<!-- Rule 3: Document contains an unsupported language -->
+	<!-- Rule 3: Document contains an unsupported language 
 	<sch:pattern name="xml_lang" id="xml_lang">
 		<sch:rule context="*[@xml:lang]">
 			<sch:assert test="@xml:lang='sv' or @xml:lang='sv-SE' or @xml:lang='en' or @xml:lang='en-US' or @xml:lang='en-GB' or @xml:lang='no' or @xml:lang='de' or @xml:lang='fr' or @xml:lang='fi'">[Rule 3] Unsupported language.</sch:assert>
 		</sch:rule>
 	</sch:pattern>
+	-->
 	<!-- Rule 4: Only allowed elements in level containing a TOC list -->
 	<sch:pattern name="check_toc" id="check_toc">
 		<sch:rule context="dtb:level1[dtb:list[@class='toc']]">
