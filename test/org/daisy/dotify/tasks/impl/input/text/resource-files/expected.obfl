@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <obfl version="2011-1" xml:lang="en" xmlns="http://www.daisy.org/ns/2011/obfl">
-<layout-master name="default" page-height="29" page-width="32">
+<layout-master name="default" page-height="29" page-width="32" inner-margin="2" outer-margin="2" row-spacing="1.0" duplex="true">
 <default-template>
 <header></header>
 <footer></footer>
