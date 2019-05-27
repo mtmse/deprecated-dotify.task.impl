@@ -1,1 +1,2 @@
 org.daisy.dotify.tasks.impl.identity.XmlIdentifierFactory
+org.daisy.dotify.tasks.impl.identity.TextIdentifierFactory
