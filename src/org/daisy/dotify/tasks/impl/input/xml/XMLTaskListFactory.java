@@ -29,7 +29,7 @@ enum XMLTaskListFactory {
 	private XMLTaskListFactory() {
 		props = new HashMap<>();
 		props.put(XMLKey.from("dtbook@http://www.daisy.org/z3986/2005/dtbook/", "dtbook"), conf->createTaskList("dtbook.properties", conf));
-		props.put(XMLKey.from("html@http://www.w3.org/1999/xhtml", "html"), conf->createTaskList("html.properties", conf));
+		props.put(XMLKey.from("html@http://www.w3.org/1999/xhtml", "xhtml"), conf->createTaskList("html.properties", conf));
 	}
 
 	static XMLTaskListFactory getInstance() {

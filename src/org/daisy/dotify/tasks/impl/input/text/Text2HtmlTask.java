@@ -22,17 +22,19 @@ class Text2HtmlTask extends ReadWriteTask {
 	private final String encoding;
 	private final String rootLang;
 	private final Map<String, Object> params;
+	private final boolean strict;
 	private static List<UserOption> options = null;
 	
-	Text2HtmlTask(String name, String rootLang, Map<String, Object> params) {
-		this(name, rootLang, getEncoding(params), params);
+	Text2HtmlTask(String name, String rootLang, Map<String, Object> params, boolean strict) {
+		this(name, rootLang, getEncoding(params), params, strict);
 	}
 
-	Text2HtmlTask(String name, String rootLang, String encoding, Map<String, Object> params) {
+	Text2HtmlTask(String name, String rootLang, String encoding, Map<String, Object> params, boolean strict) {
 		super(name);
 		this.rootLang = rootLang;
 		this.encoding = encoding;
 		this.params = params;
+		this.strict = strict;
 	}
 	
 	private static String getEncoding(Map<String, Object> params) {
@@ -59,7 +61,9 @@ class Text2HtmlTask extends ReadWriteTask {
 		} catch (IOException e) {
 			throw new InternalTaskException("IOException", e);
 		}
-		return new DefaultAnnotatedFile.Builder(output.toPath()).extension("html").mediaType("application/xhtml+xml").build();
+		return strict
+				?new DefaultAnnotatedFile.Builder(output.toPath()).extension("xhtml").mediaType("application/xhtml+xml").build()
+				:new DefaultAnnotatedFile.Builder(output.toPath()).extension("html").mediaType("text/html").build();
 	}
 
 	@Override

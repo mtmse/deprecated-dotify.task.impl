@@ -11,7 +11,8 @@ import org.daisy.streamline.api.tasks.TaskSystemException;
 class TextInputManager implements TaskGroup {
 	enum Type {
 		OBFL,
-		HTML;
+		HTML,
+		XHTML;
 	}
 	private final String rootLang;
 	private final Type type;
@@ -34,7 +35,10 @@ class TextInputManager implements TaskGroup {
 				ret.add(new Text2ObflTask("Text to OBFL converter", rootLang, parameters));
 				break;
 			case HTML:
-				ret.add(new Text2HtmlTask("Text to HTML converter", rootLang, parameters));
+				ret.add(new Text2HtmlTask("Text to HTML converter", rootLang, parameters, false));
+				break;
+			case XHTML:
+				ret.add(new Text2HtmlTask("Text to XHTML converter", rootLang, parameters, true));
 				break;
 			default:
 				throw new RuntimeException("Coding error");

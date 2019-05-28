@@ -1,6 +1,6 @@
 /**
  * <p>
- * Provides EPub 3 input support (not implemented 2013-09-10).
+ * Provides EPub 3 input support.
  * </p>
  * <p>
  * <b>IMPORTANT: This package contains implementations that should only be

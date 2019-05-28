@@ -82,11 +82,13 @@ public class XmlIdentifier implements Identifier {
 			if ("http://www.daisy.org/z3986/2005/dtbook/".equals(info.getUri())) {
 				ret.formatName("dtbook").extension("xml").mediaType("application/x-dtbook+xml");
 			} else if ("http://www.w3.org/1999/xhtml".equals(info.getUri())) {
-				ret.formatName("html").extension("html").mediaType("application/xhtml+xml");
+				ret.formatName("xhtml").extension("xhtml").mediaType("application/xhtml+xml");
 			} else if ("http://www.daisy.org/ns/2011/obfl".equals(info.getUri())) {
 				ret.formatName("obfl").extension("obfl").mediaType("application/x-obfl+xml");
 			} else if ("http://www.daisy.org/ns/2008/pef".equals(info.getUri())) {
 				ret.formatName("pef").extension("pef").mediaType("application/x-pef+xml");
+			} else if ("html".equals(info.getLocalName())) {
+				ret.formatName("html").extension("html").mediaType("text/html");
 			} else {
 				ret.formatName("xml").extension("xml").mediaType("application/xml");
 			}
@@ -122,11 +124,13 @@ public class XmlIdentifier implements Identifier {
 			if ("http://www.daisy.org/z3986/2005/dtbook/".equals(info.getUri())) {
 				details.formatName("dtbook").extension("xml").mediaType("application/x-dtbook+xml");
 			} else if ("http://www.w3.org/1999/xhtml".equals(info.getUri())) {
-				details.formatName("html").extension("html").mediaType("application/xhtml+xml");
+				details.formatName("xhtml").extension("xhtml").mediaType("application/xhtml+xml");
 			} else if ("http://www.daisy.org/ns/2011/obfl".equals(info.getUri())) {
 				details.formatName("obfl").extension("obfl").mediaType("application/x-obfl+xml");
 			} else if ("http://www.daisy.org/ns/2008/pef".equals(info.getUri())) {
 				details.formatName("pef").extension("pef").mediaType("application/x-pef+xml");
+			} else if ("html".equals(info.getLocalName())) {
+				details.formatName("html").extension("html").mediaType("text/html");
 			} else {
 				details.formatName("xml").extension("xml").mediaType("application/xml");
 			}
