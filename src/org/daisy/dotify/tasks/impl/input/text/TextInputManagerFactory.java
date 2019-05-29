@@ -29,17 +29,12 @@ public class TextInputManagerFactory implements TaskGroupFactory {
 	 */
 	public TextInputManagerFactory() {
 		String text = "text";
-		// TODO: remove txt
-		String txt = "txt"; 
 		String obfl = "obfl";
 		
 		Set<TaskGroupInformation> tmp = new HashSet<>();
 		tmp.add(TaskGroupInformation.newConvertBuilder(text, obfl).build());
-		tmp.add(TaskGroupInformation.newConvertBuilder(txt, obfl).build());
 		tmp.add(TaskGroupInformation.newConvertBuilder(text, HTML).build());
-		tmp.add(TaskGroupInformation.newConvertBuilder(txt, HTML).build());
 		tmp.add(TaskGroupInformation.newConvertBuilder(text, XHTML).build());
-		tmp.add(TaskGroupInformation.newConvertBuilder(txt, XHTML).build());
 		information = Collections.unmodifiableSet(tmp);
 	}
 	
@@ -50,9 +45,6 @@ public class TextInputManagerFactory implements TaskGroupFactory {
 
 	@Override
 	public TaskGroup newTaskGroup(TaskGroupSpecification spec) {
-		if ("txt".equalsIgnoreCase(spec.getInputType().getIdentifier()) && LOGGER.isLoggable(Level.WARNING)) {
-			LOGGER.log(Level.WARNING, "Format identifier \"txt\" is deprecated, use \"text\" instead.");
-		}
 		if (HTML.equalsIgnoreCase(spec.getOutputType().getIdentifier())) {
 			if (LOGGER.isLoggable(Level.INFO)) {
 				LOGGER.info("HTML output will be XML compliant.");
