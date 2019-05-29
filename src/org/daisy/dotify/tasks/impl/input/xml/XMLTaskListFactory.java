@@ -122,7 +122,7 @@ enum XMLTaskListFactory {
 		if (schemas!=null) {
 			for (String s : schemas) {
 				if (s!=null && !s.equals("")) {
-					setup.add(new ValidatorTask(type + " conformance checker: " + s, locator.getResource(s)));
+					setup.add(new ValidatorTask(String.format("XML/%s conformance checker: %s", type, s), locator.getResource(s)));
 				}
 			}
 		} 
@@ -132,7 +132,7 @@ enum XMLTaskListFactory {
 		if (schemas!=null) {
 			for (String s : schemas) {
 				if (s!=null && s!="") {
-					setup.add(new XsltTask(type + " to OBFL converter", locator.getResource(s), xsltParams, XmlToolsAdapter::transform));
+					setup.add(new XsltTask(String.format("XML/%s to OBFL converter", type), locator.getResource(s), xsltParams, XmlToolsAdapter::transform));
 				}
 			}
 		}
