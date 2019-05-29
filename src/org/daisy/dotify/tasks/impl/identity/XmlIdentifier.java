@@ -69,16 +69,8 @@ public class XmlIdentifier implements Identifier {
 		if (info==null) {
 			throw new IdentificationFailedException("Not well-formed XML: " + f.getPath());
 		} else {
-			DefaultAnnotatedFile.Builder ret = new DefaultAnnotatedFile.Builder(f.getPath())
-					.property(XMLNS_KEY, info.getUri())
-					.property(LOCAL_NAME_KEY, info.getLocalName())
-					.property(ATTRIBUTES_KEY, info.getAttributes());
-			if (info.getPublicId()!=null) {
-				ret.property(PUBLIC_ID_KEY, info.getPublicId());
-			}
-			if (info.getSystemId()!=null) {
-				ret.property(SYSTEM_ID_KEY, info.getSystemId());
-			}
+			DefaultAnnotatedFile.Builder ret = new DefaultAnnotatedFile.Builder(f.getPath());
+			boolean xmlProps = true;
 			if ("http://www.daisy.org/z3986/2005/dtbook/".equals(info.getUri())) {
 				ret.formatName("dtbook").extension("xml").mediaType("application/x-dtbook+xml");
 			} else if ("http://www.w3.org/1999/xhtml".equals(info.getUri())) {
@@ -89,8 +81,20 @@ public class XmlIdentifier implements Identifier {
 				ret.formatName("pef").extension("pef").mediaType("application/x-pef+xml");
 			} else if ("html".equals(info.getLocalName())) {
 				ret.formatName("html").extension("html").mediaType("text/html");
+				xmlProps = false;
 			} else {
 				ret.formatName("xml").extension("xml").mediaType("application/xml");
+			}
+			if (xmlProps) {
+				ret.property(XMLNS_KEY, info.getUri())
+					.property(LOCAL_NAME_KEY, info.getLocalName())
+					.property(ATTRIBUTES_KEY, info.getAttributes());
+				if (info.getPublicId()!=null) {
+					ret.property(PUBLIC_ID_KEY, info.getPublicId());
+				}
+				if (info.getSystemId()!=null) {
+					ret.property(SYSTEM_ID_KEY, info.getSystemId());
+				}
 			}
 			return ret.build();
 		}
@@ -111,16 +115,8 @@ public class XmlIdentifier implements Identifier {
 		if (info==null) {
 			throw new IdentificationFailedException("Not well-formed XML: " + stream.getSystemId());
 		} else {
-			DefaultFileDetails.Builder details = new DefaultFileDetails.Builder()
-					.property(XMLNS_KEY, info.getUri())
-					.property(LOCAL_NAME_KEY, info.getLocalName())
-					.property(ATTRIBUTES_KEY, info.getAttributes());
-			if (info.getPublicId()!=null) {
-				details.property(PUBLIC_ID_KEY, info.getPublicId());
-			}
-			if (info.getSystemId()!=null) {
-				details.property(SYSTEM_ID_KEY, info.getSystemId());
-			}
+			DefaultFileDetails.Builder details = new DefaultFileDetails.Builder();
+			boolean xmlProps = true;
 			if ("http://www.daisy.org/z3986/2005/dtbook/".equals(info.getUri())) {
 				details.formatName("dtbook").extension("xml").mediaType("application/x-dtbook+xml");
 			} else if ("http://www.w3.org/1999/xhtml".equals(info.getUri())) {
@@ -131,8 +127,20 @@ public class XmlIdentifier implements Identifier {
 				details.formatName("pef").extension("pef").mediaType("application/x-pef+xml");
 			} else if ("html".equals(info.getLocalName())) {
 				details.formatName("html").extension("html").mediaType("text/html");
+				xmlProps = false;
 			} else {
 				details.formatName("xml").extension("xml").mediaType("application/xml");
+			}
+			if (xmlProps) {
+				details.property(XMLNS_KEY, info.getUri())
+					.property(LOCAL_NAME_KEY, info.getLocalName())
+					.property(ATTRIBUTES_KEY, info.getAttributes());
+				if (info.getPublicId()!=null) {
+					details.property(PUBLIC_ID_KEY, info.getPublicId());
+				}
+				if (info.getSystemId()!=null) {
+					details.property(SYSTEM_ID_KEY, info.getSystemId());
+				}
 			}
 			return new DefaultAnnotatedInputStream.Builder(stream).details(details.build()).build();
 		}
