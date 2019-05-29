@@ -21,17 +21,16 @@ import org.daisy.streamline.api.tasks.ReadWriteTask;
 public class Epub3Task extends ReadWriteTask {
 	private final Logger logger;
 	private final String opfPath;
-	private final boolean strict;
+
 	
 	Epub3Task(String name) {
-		this(name, null, true);
+		this(name, null);
 	}
 
-	Epub3Task(String name, String opfPath, boolean strict) {
+	Epub3Task(String name, String opfPath) {
 		super(name);
 		this.logger = Logger.getLogger(this.getClass().getCanonicalName());
 		this.opfPath = opfPath;
-		this.strict = strict;
 	}
 
 	@Override
@@ -68,9 +67,7 @@ public class Epub3Task extends ReadWriteTask {
 		} catch (IOException e) {
 			throw new InternalTaskException(e);
 		}
-		return strict
-				?new DefaultAnnotatedFile.Builder(output.toPath()).extension("xhtml").mediaType("application/xhtml+xml").build()
-				:new DefaultAnnotatedFile.Builder(output.toPath()).extension("html").mediaType("text/html").build();
+		return new DefaultAnnotatedFile.Builder(output.toPath()).extension("xhtml").mediaType("application/xhtml+xml").build();
 	}
 	
 	@Override
