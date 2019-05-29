@@ -22,17 +22,17 @@
 <xsl:stylesheet version="2.0"
 		xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 		xmlns:xs="http://www.w3.org/2001/XMLSchema"
-		xmlns:dotify="http://brailleapps.github.io/ns/dotify"
-		exclude-result-prefixes="dotify"
+		xmlns:xtd="https://www.ologolo.org/ns/doc/xsl"
+		exclude-result-prefixes="xtd"
 		xmlns="http://www.daisy.org/ns/2011/obfl">
 
 	<xsl:output method="xml" version="1.0" encoding="UTF-8" indent="no"/>
-	<xsl:param name="page-width" select="32" as="xs:integer" dotify:desc="The width of the page (a positive integer)" dotify:default="32"/>
-	<xsl:param name="page-height" select="29" as="xs:integer" dotify:desc="The height of the page (a positive integer)" dotify:default="29"/>
-	<xsl:param name="inner-margin" select="2" as="xs:integer" dotify:desc="The inner margin (a non-negative integer)" dotify:default="2"/>
-	<xsl:param name="outer-margin" select="2" as="xs:integer" dotify:desc="The outer margin (a non-negative integer)" dotify:default="2"/>
-	<xsl:param name="row-spacing" select="1" as="xs:decimal" dotify:desc="The row spacing (a number >= 1)"/>
-	<xsl:param name="duplex" select="true()" as="xs:boolean" dotify:desc="Layout on both sides of the sheet (true/false)"/>
+	<xsl:param name="page-width" select="32" as="xs:integer" xtd:desc="The width of the page (a positive integer)" xtd:default="32"/>
+	<xsl:param name="page-height" select="29" as="xs:integer" xtd:desc="The height of the page (a positive integer)" xtd:default="29"/>
+	<xsl:param name="inner-margin" select="2" as="xs:integer" xtd:desc="The inner margin (a non-negative integer)" xtd:default="2"/>
+	<xsl:param name="outer-margin" select="2" as="xs:integer" xtd:desc="The outer margin (a non-negative integer)" xtd:default="2"/>
+	<xsl:param name="row-spacing" select="1" as="xs:decimal" xtd:desc="The row spacing (a number >= 1)"/>
+	<xsl:param name="duplex" select="true()" as="xs:boolean" xtd:desc="Layout on both sides of the sheet (true/false)"/>
 
 	<xsl:template match="/">
 		<obfl version="2011-1" xml:lang="{if (/*/@xml:lang) then /*/@xml:lang else 'und'}">

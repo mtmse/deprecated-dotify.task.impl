@@ -16,9 +16,9 @@ import java.util.stream.Collectors;
 import org.daisy.dotify.common.io.ResourceLocator;
 import org.daisy.dotify.common.io.ResourceLocatorException;
 import org.daisy.dotify.tasks.impl.input.ValidatorTask;
-import org.daisy.dotify.tasks.tools.XsltTask;
 import org.daisy.streamline.api.tasks.InternalTask;
 import org.daisy.streamline.api.tasks.InternalTaskException;
+import org.daisy.streamline.api.tasks.library.XsltTask;
 
 enum XMLTaskListFactory {
 	INSTANCE;
@@ -132,7 +132,7 @@ enum XMLTaskListFactory {
 		if (schemas!=null) {
 			for (String s : schemas) {
 				if (s!=null && s!="") {
-					setup.add(new XsltTask(type + " to OBFL converter", locator.getResource(s), xsltParams));
+					setup.add(new XsltTask(type + " to OBFL converter", locator.getResource(s), xsltParams, XmlToolsAdapter::transform));
 				}
 			}
 		}

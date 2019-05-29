@@ -8,8 +8,9 @@
 <xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" 
 	xmlns:dtb="http://www.daisy.org/z3986/2005/dtbook/"
 	xmlns:xs="http://www.w3.org/2001/XMLSchema"
-	exclude-result-prefixes="dtb xs obfl dotify"
+	exclude-result-prefixes="dtb xs obfl dotify xtd"
 	xmlns:dotify="http://brailleapps.github.io/ns/dotify"
+	xmlns:xtd="https://www.ologolo.org/ns/doc/xsl"
 	xmlns:obfl="http://www.daisy.org/ns/2011/obfl"
 	xmlns="http://www.daisy.org/ns/2011/obfl"
 	xmlns:axsl="http://www.w3.org/1999/XSL/TransformAlias">
@@ -18,14 +19,14 @@
 	<xsl:output method="xml" encoding="utf-8" indent="no"/>
 	<xsl:namespace-alias stylesheet-prefix="axsl" result-prefix="xsl"/>
 	<xsl:strip-space elements="dtb:note"/>
-	<xsl:param name="toc-indent-multiplier" select="1" dotify:desc="Indentation for each toc level" dotify:default="1"/>
-	<xsl:param name="toc-depth" select="6" dotify:desc="The maximum depth of generated toc (A positive integer)" dotify:default="6"/>
+	<xsl:param name="toc-indent-multiplier" select="1" xtd:desc="Indentation for each toc level" xtd:default="1"/>
+	<xsl:param name="toc-depth" select="6" xtd:desc="The maximum depth of generated toc (A positive integer)" xtd:default="6"/>
 	<xsl:param name="volume-toc" as="xs:boolean" select="true()"/>
 	<xsl:param name="show-braille-page-numbers" as="xs:boolean" select="true()"/>
 	<xsl:param name="show-print-page-numbers" as="xs:boolean" select="true()"/>
 	<xsl:param name="matrix-table-columns-max" select="5"/>
 	<xsl:param name="staircase-table-columns-max" select="8"/>
-	<xsl:param name="volume-break-transition" select="'none'" dotify:desc="Volume break transition range. Within the range, text may be moved to the following volume." dotify:default="none" dotify:values="none/page/sheet"/>
+	<xsl:param name="volume-break-transition" select="'none'" xtd:desc="Volume break transition range. Within the range, text may be moved to the following volume." xtd:default="none" xtd:values="none/page/sheet"/>
 
 	<xsl:param name="l10nLang" select="'en'"/>
 	<xsl:param name="l10nTocHeadline" select="'Table Of Contents'"/>

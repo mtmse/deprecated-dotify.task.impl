@@ -16,13 +16,13 @@ import java.util.logging.Logger;
 import org.daisy.dotify.common.io.ResourceLocator;
 import org.daisy.dotify.common.io.ResourceLocatorException;
 import org.daisy.dotify.tasks.impl.FeatureSwitch;
-import org.daisy.dotify.tasks.impl.input.DuplicatorTask;
-import org.daisy.dotify.tasks.tools.XsltTask;
 import org.daisy.streamline.api.option.UserOption;
 import org.daisy.streamline.api.option.UserOptionValue;
 import org.daisy.streamline.api.tasks.InternalTask;
 import org.daisy.streamline.api.tasks.TaskGroup;
 import org.daisy.streamline.api.tasks.TaskSystemException;
+import org.daisy.streamline.api.tasks.library.DuplicatorTask;
+import org.daisy.streamline.api.tasks.library.XsltTask;
 
 /**
  * <p>Provides a method to determine the input format and load the 
@@ -107,7 +107,7 @@ public class XMLInputManager implements TaskGroup {
 		Map<String, Object> params = makeXSLTParams(parameters);
 
 		if ("true".equalsIgnoreCase(parameters.getOrDefault(PROCESS_EDITING_INSTRUCTIONS, "false").toString())) {
-			ret.add(new XsltTask("Editing instructions processor", this.getClass().getResource("resource-files/editing-instructions.xsl"), params));
+			ret.add(new XsltTask("Editing instructions processor", this.getClass().getResource("resource-files/editing-instructions.xsl"), params, XmlToolsAdapter::transform));
 		}
 
 		ret.add(new XMLExpandingTask(template, params, localLocator, commonLocator));

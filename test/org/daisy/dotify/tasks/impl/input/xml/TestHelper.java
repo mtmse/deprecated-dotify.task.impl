@@ -35,13 +35,13 @@ import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
 import org.daisy.braille.utils.pef.XMLFileCompare;
-import org.daisy.dotify.tasks.tools.XsltTask;
 import org.daisy.streamline.api.media.DefaultAnnotatedFile;
 import org.daisy.streamline.api.media.FormatIdentifier;
 import org.daisy.streamline.api.tasks.InternalTaskException;
 import org.daisy.streamline.api.tasks.TaskGroup;
 import org.daisy.streamline.api.tasks.TaskGroupSpecification;
 import org.daisy.streamline.api.tasks.TaskSystemException;
+import org.daisy.streamline.api.tasks.library.XsltTask;
 import org.daisy.streamline.engine.TaskRunner;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -127,7 +127,7 @@ public class TestHelper {
 	public static void runXSLT(String input, String xslt, String expected, Map<String, Object> options, boolean keep) throws IOException, InternalTaskException, URISyntaxException{
 		File actual = File.createTempFile(TestHelper.class.getName(), ".tmp");
 		try {
-			XsltTask task = new XsltTask("XSLT Test", TestHelper.class.getResource(xslt), options);
+			XsltTask task = new XsltTask("XSLT Test", TestHelper.class.getResource(xslt), options, XmlToolsAdapter::transform);
 			Path src = Paths.get(TestHelper.class.getResource(input).toURI());
 			task.execute(DefaultAnnotatedFile.with(src).build(), actual);
 			XMLFileCompare c = new XMLFileCompare(TransformerFactory.newInstance());

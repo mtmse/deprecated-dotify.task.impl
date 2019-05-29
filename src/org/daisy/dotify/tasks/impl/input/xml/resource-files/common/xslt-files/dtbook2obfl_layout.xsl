@@ -31,8 +31,8 @@
 		xmlns:xs="http://www.w3.org/2001/XMLSchema"
 		xmlns:dtb="http://www.daisy.org/z3986/2005/dtbook/"
 		xmlns:obfl="http://www.daisy.org/ns/2011/obfl"
-		xmlns:dotify="http://brailleapps.github.io/ns/dotify"
-		exclude-result-prefixes="dtb xs obfl dotify"
+		xmlns:xtd="https://www.ologolo.org/ns/doc/xsl"
+		exclude-result-prefixes="dtb xs obfl xtd"
 		xmlns="http://www.daisy.org/ns/2011/obfl">
 
 	<xsl:import href="dtbook2obfl_base.xsl"/>
@@ -44,11 +44,11 @@
 	<xsl:param name="outer-margin" select="2" as="xs:integer"/>
 	<xsl:param name="row-spacing" select="1" as="xs:decimal"/>
 	<xsl:param name="duplex" select="true()" as="xs:boolean"/>
-	<xsl:param name="default-paragraph-separator" select="'indent'" as="xs:string" dotify:desc="Default paragraph separator" dotify:default="indent" dotify:values="empty-line/indent"/> <!-- empty-line or indent -->
+	<xsl:param name="default-paragraph-separator" select="'indent'" as="xs:string" xtd:desc="Default paragraph separator" xtd:default="indent" xtd:values="empty-line/indent"/> <!-- empty-line or indent -->
 	<xsl:param name="remove-title-page" select="'true'" 
-			dotify:desc="Removes the title page from the text flow (@class=&quot;titlepage&quot; or @class=&quot;halftitlepage&quot;)" 
-			dotify:values="true/false"
-			dotify:default="true"/>
+			xtd:desc="Removes the title page from the text flow (@class=&quot;titlepage&quot; or @class=&quot;halftitlepage&quot;)" 
+			xtd:values="true/false"
+			xtd:default="true"/>
 	
 	<xsl:param name="l10nimagedescription" select="'Image description'"/>
 	<xsl:param name="l10ncaption" select="'Caption'"/>

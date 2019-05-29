@@ -5,21 +5,22 @@
 	xmlns:epub="http://www.idpf.org/2007/ops"
 	xmlns:obfl="http://www.daisy.org/ns/2011/obfl"
 	xmlns:dotify="http://brailleapps.github.io/ns/dotify"
-	exclude-result-prefixes="html epub xs obfl dotify"
+	xmlns:xtd="https://www.ologolo.org/ns/doc/xsl"
+	exclude-result-prefixes="html epub xs obfl dotify xtd"
 	xmlns="http://www.daisy.org/ns/2011/obfl">
 	<xsl:import href="html2obfl_base.xsl"/>
 	<xsl:import href="book-formats.xsl"/>
 	<xsl:output method="xml" encoding="utf-8" indent="no"/>
 	<xsl:param name="default-paragraph-separator" select="'indent'" as="xs:string"/> <!-- empty-line or indent -->
-	<xsl:param name="toc-depth" select="6" dotify:desc="The maximum depth of generated toc (A positive integer)" dotify:default="6"/>
-	<xsl:param name="toc-indent-multiplier" select="1" dotify:desc="Indentation for each toc level"  dotify:default="1"/>
+	<xsl:param name="toc-depth" select="6" xtd:desc="The maximum depth of generated toc (A positive integer)" xtd:default="6"/>
+	<xsl:param name="toc-indent-multiplier" select="1" xtd:desc="Indentation for each toc level"  xtd:default="1"/>
 	<!-- TODO: should also support value 'keep' to keep the original toc -->
-	<xsl:param name="toc-policy" select="'replace'" dotify:desc="The toc generation policy" dotify:default="replace" dotify:values="replace/always"/>
+	<xsl:param name="toc-policy" select="'replace'" xtd:desc="The toc generation policy" xtd:default="replace" xtd:values="replace/always"/>
 	<xsl:param name="remove-title-page" select="'true'" 
-			dotify:desc="Removes the title page from the text flow (@epub:type=&quot;titlepage&quot; or @epub:type=&quot;halftitlepage&quot;)" 
-			dotify:values="true/false"
-			dotify:default="true"/>
-	<xsl:param name="volume-break-transition" select="'none'" dotify:desc="Volume break transition range. Within the range, text may be moved to the following volume." dotify:default="none" dotify:values="none/page/sheet"/>
+			xtd:desc="Removes the title page from the text flow (@epub:type=&quot;titlepage&quot; or @epub:type=&quot;halftitlepage&quot;)" 
+			xtd:values="true/false"
+			xtd:default="true"/>
+	<xsl:param name="volume-break-transition" select="'none'" xtd:desc="Volume break transition range. Within the range, text may be moved to the following volume." xtd:default="none" xtd:values="none/page/sheet"/>
 	<xsl:param name="l10ntable" select="'Table'"/>
 	
 	<xsl:key name="noterefs" match="html:a[epub:noteref(.)]" use="substring-after(@href, '#')"/>
