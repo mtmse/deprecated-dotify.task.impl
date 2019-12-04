@@ -267,9 +267,8 @@
 	
 	<xsl:template match="dtb:level1|dtb:level2" mode="toc">
 		<xsl:if test="dtb:h1|dtb:h2">
-			<toc-block>
-				<toc-entry ref-id="{generate-id(dtb:h1|dtb:h2)}" block-indent="{$toc-indent-multiplier}"
-						   text-indent="{2*$toc-indent-multiplier}" keep="page">
+			<toc-block block-indent="{$toc-indent-multiplier}" text-indent="{2*$toc-indent-multiplier}" keep="page">
+				<toc-entry ref-id="{generate-id(dtb:h1|dtb:h2)}" >
 					<xsl:apply-templates select="dtb:h1|dtb:h2" mode="toc-hd"/>
 				</toc-entry>
 				<xsl:apply-templates mode="toc"/>
@@ -279,9 +278,8 @@
 	
 	<xsl:template match="dtb:level3|dtb:level4|dtb:level5|dtb:level6" mode="toc">
 		<xsl:if test="dtb:h3|dtb:h4|dtb:h5|dtb:h6">
-			<toc-block>
-				<toc-entry ref-id="{generate-id(dtb:h3|dtb:h4|dtb:h5|dtb:h6)}" block-indent="{$toc-indent-multiplier}"
-						   text-indent="{$toc-indent-multiplier}" keep="page">
+			<toc-block block-indent="{$toc-indent-multiplier}" text-indent="{$toc-indent-multiplier}" keep="page">
+				<toc-entry ref-id="{generate-id(dtb:h3|dtb:h4|dtb:h5|dtb:h6)}">
 					<xsl:apply-templates select="dtb:h3|dtb:h4|dtb:h5|dtb:h6" mode="toc-hd"/>
 				</toc-entry>
 				<xsl:if test="dtb:level3 and ancestor::dtb:level1[@class='part']">
