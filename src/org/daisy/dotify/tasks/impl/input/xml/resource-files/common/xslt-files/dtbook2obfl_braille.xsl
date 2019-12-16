@@ -5,7 +5,7 @@
 		- komplexa sub, sup
 		- länkar, e-postadresser
 -->
-<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" 
+<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 	xmlns:dtb="http://www.daisy.org/z3986/2005/dtbook/"
 	xmlns:xs="http://www.w3.org/2001/XMLSchema"
 	exclude-result-prefixes="dtb xs obfl dotify xtd"
@@ -40,7 +40,7 @@
 	<xsl:param name="l10nEndnotesPageHeader" select="'Footnotes'"/>
 	<xsl:param name="l10ntable" select="'Table'"/>
 	<xsl:param name="l10ntablepart" select="'Table part'"/>
-	
+
 	<xsl:key name="noterefs" match="dtb:noteref" use="substring-after(@idref, '#')"/>
 
 	<xsl:template match="/">
@@ -54,13 +54,13 @@
 			<xsl:apply-templates/>
 		</obfl>
 	</xsl:template>
-	
+
 	<xsl:template name="insertLayoutMaster">
 		<xsl:copy-of select="obfl:insertLayoutMaster(
-			count(//dtb:note[key('noterefs', @id)[ancestor::dtb:frontmatter]]), 
+			count(//dtb:note[key('noterefs', @id)[ancestor::dtb:frontmatter]]),
 			count(//dtb:note[key('noterefs', @id)[not(ancestor::dtb:frontmatter)]]))"/>
 	</xsl:template>
-	
+
 	<xsl:template name="insertTOCVolumeTemplate">
 		<xsl:variable name="insertToc" select="$toc-depth > 0 and (//dtb:level1[@class='toc'] or //dtb:level1[dtb:list[@class='toc']])" as="xs:boolean"/>
 		<xsl:if test="$insertToc">
@@ -106,14 +106,14 @@
 	</xsl:template>
 
 	<xsl:template name="insertNoteCollection">
-		<xsl:param name="footnotesInFrontMatter" select="//dtb:note[key('noterefs', @id)[ancestor::dtb:frontmatter]]"/> 
+		<xsl:param name="footnotesInFrontMatter" select="//dtb:note[key('noterefs', @id)[ancestor::dtb:frontmatter]]"/>
 		<xsl:param name="footnotesNotInFrontMatter" select="//dtb:note[key('noterefs', @id)[not(ancestor::dtb:frontmatter)]]"/>
 		<xsl:if test="count($footnotesInFrontMatter)>0">
 			<collection name="footnotes-front">
 				<xsl:apply-templates select="$footnotesInFrontMatter" mode="collectNotes">
 					<xsl:with-param name="afix">.A</xsl:with-param>
 				</xsl:apply-templates>
-				<!-- 
+				<!--
 				<item id="note1" text-indent="4">1).</item>  -->
 			</collection>
 		</xsl:if>
@@ -122,12 +122,12 @@
 				<xsl:apply-templates select="$footnotesNotInFrontMatter" mode="collectNotes">
 					<xsl:with-param name="afix">.B</xsl:with-param>
 				</xsl:apply-templates>
-				<!-- 
+				<!--
 				<item id="note1" text-indent="4">1).</item>  -->
 			</collection>
 		</xsl:if>
 	</xsl:template>
-	
+
 	<xsl:template match="dtb:noteref" priority="10">
 		<xsl:apply-templates select="." mode="inline-mode"/>
 		<xsl:variable name="afix">
@@ -141,7 +141,7 @@
 			<xsl:otherwise><xsl:message terminate="no">Only fragment identifier supported: <xsl:value-of select="@idref"/></xsl:message></xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
-	
+
 	<xsl:template match="dtb:note" mode="collectNotes">
 			<xsl:param name="afix"/>
 			<item id="{concat(@id, $afix)}">
@@ -152,7 +152,7 @@
 					<xsl:choose>
 						<xsl:when test="self::text()">
 							<xsl:message terminate="yes">Unexpected text contents in "note" element.</xsl:message>
-						</xsl:when> 
+						</xsl:when>
 						<xsl:when test="position()=1 and count(text())>0"> <!-- and an element -->
 							<xsl:copy>
 								<xsl:copy-of select="@*[not(local-name()='first-line-indent' or local-name()='text-indent' or local-name()='block-indent')]"/>
@@ -181,7 +181,7 @@
 			</sequence>
 		</xsl:if>
 	</xsl:template>
-	
+
 		<!-- Don't output a sequence if there is nothing left when level1@class='backCoverText', level1@class='rearjacketcopy' and level1@class='colophon' has been moved -->
 	<xsl:template match="dtb:rearmatter" mode="sequence-mode">
 		<xsl:if test="*[not(self::dtb:level1[@class='backCoverText' or @class='rearjacketcopy' or @class='colophon' or @class='toc' or dtb:list[@class='toc']
@@ -193,14 +193,14 @@
 			</sequence>
 		</xsl:if>
 	</xsl:template>
-	
+
 		<!-- Don't output a sequence if there is nothing left when doctitle, docauthor and level1@class='backCoverText', level1@class='rearjacketcopy' and level1@class='colophon' has been moved -->
 	<xsl:template match="dtb:frontmatter" mode="pre-volume-mode">
 		<xsl:if test="*[not(self::dtb:doctitle or self::dtb:docauthor or self::dtb:level1[@class='backCoverText' or @class='rearjacketcopy' or @class='colophon' or @class='toc' or dtb:list[@class='toc']])]">
 			<sequence master="front">
 				<block break-before="page">
 					<xsl:apply-templates/>
-					<!-- 
+					<!--
 					<xsl:variable name="tree">
 						<xsl:apply-templates/>
 					</xsl:variable>
@@ -213,19 +213,19 @@
 	<xsl:template match="*|comment()|processing-instruction()" mode="strip-id">
 		<xsl:call-template name="copy-without-id"/>
 	</xsl:template>
-	
+
 	<xsl:template name="copy-without-id">
 		<xsl:copy>
 			<xsl:copy-of select="@*[name()!='id']"/>
 			<xsl:apply-templates mode="strip-id"/>
 		</xsl:copy>
 	</xsl:template>
-	
+
 	<xsl:template match="dtb:level1[@class='toc' or dtb:list[@class='toc']]"></xsl:template>
 	<xsl:template match="dtb:level1[@class='toc' or dtb:list[@class='toc']]" mode="toc"></xsl:template>
 
 	<xsl:template match="dtb:level1[(@class='backCoverText' or @class='rearjacketcopy' or @class='colophon') and (parent::dtb:frontmatter or parent::dtb:rearmatter)]" mode="toc"></xsl:template>
-	
+
 	<xsl:template match="dtb:level1[
 		count(descendant::dtb:note)>0 and
 		count(descendant::*[not(ancestor::dtb:note) and (self::dtb:level2 or self::dtb:level3 or self::dtb:level4 or self::dtb:level5 or self::dtb:level6 or self::dtb:h1 or self::dtb:h2 or self::dtb:h3 or self::dtb:h4 or self::dtb:h5 or self::dtb:h6 or self::dtb:note or self::dtb:pagenum)])
@@ -238,7 +238,7 @@
 			<xsl:next-match />
 		</xsl:if>
 	</xsl:template>
-	
+
 	<xsl:template match="dtb:level2" mode="toc" priority="0.6">
 		<xsl:if test="$toc-depth > 1">
 			<xsl:next-match/>
@@ -264,7 +264,7 @@
 			<xsl:next-match/>
 		</xsl:if>
 	</xsl:template>
-	
+
 	<xsl:template match="dtb:level1|dtb:level2" mode="toc">
 		<xsl:if test="dtb:h1|dtb:h2">
 			<toc-block block-indent="{$toc-indent-multiplier}" text-indent="{2*$toc-indent-multiplier}" keep="page">
@@ -275,7 +275,7 @@
 			</toc-block>
 		</xsl:if>
 	</xsl:template>
-	
+
 	<xsl:template match="dtb:level3|dtb:level4|dtb:level5|dtb:level6" mode="toc">
 		<xsl:if test="dtb:h3|dtb:h4|dtb:h5|dtb:h6">
 			<toc-block block-indent="{$toc-indent-multiplier}" text-indent="{$toc-indent-multiplier}" keep="page">
@@ -285,21 +285,21 @@
 				<xsl:if test="dtb:level3 and ancestor::dtb:level1[@class='part']">
 					<xsl:apply-templates mode="toc"/>
 				</xsl:if>
-				<xsl:if test="not(dtb:level3 and ancestor::dtb:level1[@class='part'])">
-					<xsl:apply-templates mode="toc"/>
-				</xsl:if>
 			</toc-block>
+			<xsl:if test="not(dtb:level3 and ancestor::dtb:level1[@class='part'])">
+				<xsl:apply-templates mode="toc"/>
+			</xsl:if>
 		</xsl:if>
 	</xsl:template>
 	<!--
 	<xsl:template name="addBottomMarginIfPart">
-	
+
 		<xsl:if test="(following::*[self::dtb:level1|self::dtb:level2|self::dtb:level3|self::dtb:level4|self::dtb:level5|self::dtb:level6][1])[self::dtb:level1[@class='part']]">
 			<xsl:attribute name="padding-bottom">1</xsl:attribute>
 		</xsl:if>
 	</xsl:template>
 -->
-	
+
 	<xsl:template match="dtb:h1|dtb:h2|dtb:h3|dtb:h4|dtb:h5|dtb:h6" mode="toc-hd">
 <!--		<xsl:value-of select="descendant::text()"/>-->
 	<xsl:apply-templates mode="toc-text"/>
@@ -322,9 +322,9 @@
 	<xsl:template match="dtb:br" mode="toc-text">
 		<xsl:text> </xsl:text>
 	</xsl:template>
-	
+
 	<xsl:template match="node()" mode="toc"/>
-	
+
 	<xsl:template name="insertProcessorRenderer">
 		<xsl:copy-of select="obfl:insertProcessorRenderer()"/>
 	</xsl:template>
@@ -332,7 +332,7 @@
 	<xsl:template match="dtb:table">
 		<xml-data renderer="table-renderer" xmlns:dotify="http://brailleapps.github.io/ns/dotify">
 			<dotify:node>
-				<block keep="page" keep-with-next="1"><xsl:value-of select="concat('== ', $l10ntable, ' ')"/><leader position="100%" pattern="="/></block>			
+				<block keep="page" keep-with-next="1"><xsl:value-of select="concat('== ', $l10ntable, ' ')"/><leader position="100%" pattern="="/></block>
 				<xsl:apply-templates select="dtb:caption"/>
 				<xsl:apply-templates select="." mode="matrixTable"/>
 				<block><leader align="right" position="100%" pattern="="/></block>
@@ -340,11 +340,11 @@
 			</dotify:node>
 		</xml-data>
 	</xsl:template>
-	
+
 	<xsl:template match="dtb:table" mode="matrixTable">
 		<table table-col-spacing="2">
 			<xsl:choose>
-				<xsl:when test="dtb:thead"> 
+				<xsl:when test="dtb:thead">
 					<thead>
 						<xsl:apply-templates select="dtb:thead/dtb:tr" mode="matrixRow"/>
 					</thead>
@@ -364,13 +364,13 @@
 			</xsl:choose>
 		</table>
 	</xsl:template>
-	
+
 	<xsl:template match="dtb:tr" mode="matrixRow">
 		<tr>
 			<xsl:apply-templates mode="matrixCell"/>
 		</tr>
 	</xsl:template>
-	
+
 	<xsl:template match="dtb:td | dtb:th" mode="matrixCell">
 		<td>
 			<xsl:if test="@colspan">
