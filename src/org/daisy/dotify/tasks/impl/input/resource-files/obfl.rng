@@ -38,14 +38,14 @@
     </optional>
     <optional>
       <attribute name="translate">
-		<choice>
-	        <value></value>
-	        <value>pre-translated</value>
+        <choice>
+          <value></value>
+          <value>pre-translated</value>
           <value>grade0</value>
-	        <value>grade1</value>
-	        <value>grade2</value>
-	        <value>grade3</value>
-	    </choice>
+          <value>grade1</value>
+          <value>grade2</value>
+          <value>grade3</value>
+        </choice>
       </attribute>
     </optional>
   </define>
@@ -283,16 +283,16 @@
         </choice>
       </attribute>
     </optional>
-  	<optional>
-  		<attribute name="list-style">
-  			<data type="string"/>
-  		</attribute>
-  	</optional>
-  	<optional>
-  		<attribute name="list-item-label">
-  			<data type="string"/>
-  		</attribute>
-  	</optional>
+    <optional>
+      <attribute name="list-style">
+        <data type="string"/>
+      </attribute>
+    </optional>
+    <optional>
+      <attribute name="list-item-label">
+        <data type="string"/>
+      </attribute>
+    </optional>
   </define>
   <define name="block-atts">
     <ref name="list-atts"/>
@@ -461,7 +461,7 @@
         <ref name="layout-master"/>
       </oneOrMore>
       <zeroOrMore>
-      	<ref name="file-reference"/>
+        <ref name="file-reference"/>
       </zeroOrMore>
       <zeroOrMore>
         <ref name="xml-processor"/>
@@ -507,14 +507,14 @@
     </optional>
     <optional>
       <attribute name="translate">
-      	<choice>
-	        <value></value>
-	        <value>pre-translated</value>
-      	  <value>grade0</value>
-	        <value>grade1</value>
-	        <value>grade2</value>
-	        <value>grade3</value>
-	    </choice>
+        <choice>
+          <value></value>
+          <value>pre-translated</value>
+          <value>grade0</value>
+          <value>grade1</value>
+          <value>grade2</value>
+          <value>grade3</value>
+        </choice>
       </attribute>
     </optional>
   </define>
@@ -679,14 +679,14 @@
         <data type="NMTOKEN"/>
       </attribute>
     </optional>
-     <optional>
+    <optional>
       <attribute name="allow-text-flow">
         <choice>
           <value>true</value>
           <value>false</value>
         </choice>
       </attribute>
-     </optional>
+    </optional>
   </define>
   <define name="current-page">
     <element name="current-page">
@@ -695,7 +695,7 @@
     </element>
   </define>
   <define name="attlist-current-page" combine="interleave">
-     <optional>
+    <optional>
       <attribute name="number-format">
         <choice>
           <value>default</value>
@@ -706,7 +706,7 @@
           <value>lower-alpha</value>
         </choice>
       </attribute>
-     </optional>
+    </optional>
     <optional>
       <attribute name="text-style">
         <data type="NMTOKEN"/>
@@ -745,7 +745,7 @@
     <optional>
       <attribute name="start-offset">
         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Offsets the start of the search by the specified number of pages</documentation>
-         <data type="short"/>
+        <data type="short"/>
       </attribute>
     </optional>
     <optional>
@@ -792,21 +792,33 @@
     <element name="table-of-contents">
       <ref name="attlist-table-of-contents"/>
       <oneOrMore>
-        <ref name="toc-entry"/>
+        <ref name="toc-block"/>
       </oneOrMore>
     </element>
   </define>
   <define name="attlist-table-of-contents" combine="interleave">
     <ref name="name-id"/>
   </define>
+  <define name="toc-block">
+    <element name="toc-block">
+      <ref name="attlist-toc-block"/>
+      <zeroOrMore>
+        <choice>
+          <ref name="toc-entry"/>
+          <ref name="toc-entry-on-resumed"/>
+          <ref name="toc-block"/>
+        </choice>
+      </zeroOrMore>
+    </element>
+  </define>
+  <define name="attlist-toc-block" combine="interleave">
+    <ref name="blockAtts"/>
+  </define>
   <define name="toc-entry">
     <element name="toc-entry">
       <ref name="attlist-toc-entry"/>
       <zeroOrMore>
-        <choice>
-          <ref name="blockContents"/>
-          <ref name="toc-entry"/>
-        </choice>
+        <ref name="blockContents"/>
       </zeroOrMore>
     </element>
   </define>
@@ -814,7 +826,21 @@
     <attribute name="ref-id">
       <data type="IDREF"/>
     </attribute>
-    <ref name="blockAtts"/>
+  </define>
+  <define name="toc-entry-on-resumed">
+    <element name="toc-entry-on-resumed">
+      <ref name="attlist-toc-entry-on-resumed"/>
+      <zeroOrMore>
+        <ref name="blockContents"/>
+      </zeroOrMore>
+    </element>
+  </define>
+  <define name="attlist-toc-entry-on-resumed" combine="interleave">
+    <attribute name="range">
+      <data type="string">
+        <param name="pattern">\[[^,\[\]\)]+,([^,\[\]\)]+\]|[^,\[\]\)]*\))</param>
+      </data>
+    </attribute>
   </define>
   <define name="volume-template">
     <element name="volume-template">
@@ -960,7 +986,7 @@
         <ref name="on-toc-end"/>
       </zeroOrMore>
     </element>
-  </define>  
+  </define>
   <define name="attlist-toc-sequence" combine="interleave">
     <attribute name="toc">
       <data type="IDREF"/>
@@ -1567,16 +1593,16 @@
   <define name="xml-data">
     <element name="xml-data">
       <ref name="attlist-xml-data"/>
-    	<choice>
-    		<ref name="any_element"/>
-    		<ref name="any_obfl"/>
-    	</choice>
+      <choice>
+        <ref name="any_element"/>
+        <ref name="any_obfl"/>
+      </choice>
     </element>
   </define>
   <define name="attlist-xml-data" combine="interleave">
     <attribute name="renderer" >
       <data type="IDREF"/>
-    </attribute> 
+    </attribute>
   </define>
   <define name="renderer">
     <element name="renderer">
@@ -1597,7 +1623,7 @@
     <element name="rendering-scenario">
       <ref name="attlist-rendering-scenario"/>
       <zeroOrMore>
-      	<ref name="parameter"/>
+        <ref name="parameter"/>
       </zeroOrMore>
     </element>
   </define>
@@ -1606,7 +1632,7 @@
       <data type="IDREF"/>
     </attribute>
     <attribute name="cost">
-       <data type="string"/>
+      <data type="string"/>
     </attribute>
     <optional>
       <attribute name="qualifier">
@@ -1615,30 +1641,30 @@
     </optional>
   </define>
   <define name="parameter">
-  	<element name="parameter">
-  		<ref name="attlist-parameter"/>
-  	</element>
+    <element name="parameter">
+      <ref name="attlist-parameter"/>
+    </element>
   </define>
   <define name="attlist-parameter">
-  	<attribute name="name">
-  		<data type="string"/>
-  	</attribute>
-  	<attribute name="value">
-  		<data type="string"/>
-  	</attribute>
+    <attribute name="name">
+      <data type="string"/>
+    </attribute>
+    <attribute name="value">
+      <data type="string"/>
+    </attribute>
   </define>
   <define name="file-reference">
-  	<element name="file-reference">
-  		<ref name="attlist-file-reference"/>
-  		<choice>
-  			<ref name="any_content"/>
-  		</choice>
-  	</element>
+    <element name="file-reference">
+      <ref name="attlist-file-reference"/>
+      <choice>
+        <ref name="any_content"/>
+      </choice>
+    </element>
   </define>
   <define name="attlist-file-reference">
-		<attribute name="uri">
-			<data type="string"/>
-		</attribute>
+    <attribute name="uri">
+      <data type="string"/>
+    </attribute>
   </define>
   <define name="xml-processor">
     <element name="xml-processor">
@@ -1666,7 +1692,7 @@
       </choice>
     </zeroOrMore>
   </define>
-  
+
   <define name="any_element_except_obfl">
     <element>
       <anyName><except><nsName ns="http://www.daisy.org/ns/2011/obfl"></nsName></except></anyName>
@@ -1678,28 +1704,64 @@
       <ref name="any"/>
     </element>
   </define>
-  
+
   <define name="any_content">
     <zeroOrMore>
       <choice>
         <ref name="any_element"/>
         <ref name="any_obfl"/>
         <text/>
-      </choice>        
+      </choice>
     </zeroOrMore>
   </define>
- 
+
   <define name="any_obfl">
     <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">
       This definition is complex because any id/idref values defined in obfl needs to be retained using an enumerated list.
       For these elements, the id/idref attributes are retained as optional. This will work for many situations, but it will
-      fail in some cases, for example if the same id is used on two obfl elements inside different branches of an xslt choice 
+      fail in some cases, for example if the same id is used on two obfl elements inside different branches of an xslt choice
       statement.
     </documentation>
     <choice>
-    <element>
-      <nsName ns="http://www.daisy.org/ns/2011/obfl">
-        <except>
+      <element>
+        <nsName ns="http://www.daisy.org/ns/2011/obfl">
+          <except>
+            <name>table-of-contents</name>
+            <name>collection</name>
+            <name>xml-processor</name>
+            <name>layout-master</name>
+            <name>renderer</name>
+            <name>rendering-scenario</name>
+            <name>toc-sequence</name>
+            <name>rename</name>
+            <name>anchor</name>
+            <name>sequence</name>
+            <name>dynamic-sequence</name>
+            <name>xml-data</name>
+            <name>toc-entry</name>
+            <name>page-number</name>
+            <name>list-of-references</name>
+            <name>page-area</name>
+            <name>item</name>
+            <name>before</name>
+            <name>block</name>
+            <name>toc-block</name>
+            <name>td</name>
+            <name>after</name>
+          </except>
+        </nsName>
+        <optional>
+          <attribute name="name"><data type="NMTOKEN"/></attribute>
+        </optional>
+        <zeroOrMore>
+          <attribute><anyName><except><name ns="">name</name></except></anyName></attribute>
+        </zeroOrMore>
+        <zeroOrMore>
+          <ref name="any_content"/>
+        </zeroOrMore>
+      </element>
+      <element ns="http://www.daisy.org/ns/2011/obfl">
+        <choice>
           <name>table-of-contents</name>
           <name>collection</name>
           <name>xml-processor</name>
@@ -1719,79 +1781,45 @@
           <name>item</name>
           <name>before</name>
           <name>block</name>
+          <name>toc-block</name>
           <name>td</name>
           <name>after</name>
-        </except>
-      </nsName>
-      <optional>
-        <attribute name="name"><data type="NMTOKEN"/></attribute>
-      </optional>
-      <zeroOrMore>
-        <attribute><anyName><except><name ns="">name</name></except></anyName></attribute>
-      </zeroOrMore>
-      <zeroOrMore>
-        <ref name="any_content"/>
-      </zeroOrMore>
-    </element>
-    <element ns="http://www.daisy.org/ns/2011/obfl">
-      <choice>
-          <name>table-of-contents</name>
-          <name>collection</name>
-          <name>xml-processor</name>
-          <name>layout-master</name>
-          <name>renderer</name>
-          <name>rendering-scenario</name>
-          <name>toc-sequence</name>
-          <name>rename</name>
-          <name>anchor</name>
-          <name>sequence</name>
-          <name>dynamic-sequence</name>
-          <name>xml-data</name>
-          <name>toc-entry</name>
-          <name>page-number</name>
-          <name>list-of-references</name>
-          <name>page-area</name>
-          <name>item</name>
-          <name>before</name>
-          <name>block</name>
-          <name>td</name>
-          <name>after</name>
-      </choice>
-      <optional><attribute name="id"><data type="ID"/></attribute></optional>
-      <optional><attribute name="collection"><data type="IDREF"/></attribute></optional>
-      <optional><attribute name="ref-id"><data type="IDREF"/></attribute></optional>
-      <optional><attribute name="renderer"><data type="IDREF"/></attribute></optional>
-      <optional><attribute name="name"><data type="ID"/></attribute></optional>
-      <optional><attribute name="master"><data type="IDREF"/></attribute></optional>
-      <optional><attribute name="item"><data type="IDREF"/></attribute></optional>
-      <optional><attribute name="to"><data type="ID"/></attribute></optional>
-      <optional><attribute name="toc"><data type="IDREF"/></attribute></optional>
-      <optional><attribute name="processor"><data type="IDREF"/></attribute></optional>
-      <zeroOrMore>
-        <attribute>
-          <anyName>
-            <except>
-              <name ns="">id</name>
-              <name ns="">collection</name>
-              <name ns="">ref-id</name>
-              <name ns="">renderer</name>
-              <name ns="">name</name>
-              <name ns="">master</name>
-              <name ns="">item</name>
-              <name ns="">to</name>
-              <name ns="">toc</name>
-              <name ns="">processor</name>
-            </except>
-          </anyName>
-        </attribute>
-      </zeroOrMore>
-      <zeroOrMore>
-        <ref name="any_content"/>
-      </zeroOrMore>
-    </element>
+        </choice>
+        <optional><attribute name="id"><data type="ID"/></attribute></optional>
+        <optional><attribute name="collection"><data type="IDREF"/></attribute></optional>
+        <optional><attribute name="ref-id"><data type="IDREF"/></attribute></optional>
+        <optional><attribute name="renderer"><data type="IDREF"/></attribute></optional>
+        <optional><attribute name="name"><data type="ID"/></attribute></optional>
+        <optional><attribute name="master"><data type="IDREF"/></attribute></optional>
+        <optional><attribute name="item"><data type="IDREF"/></attribute></optional>
+        <optional><attribute name="to"><data type="ID"/></attribute></optional>
+        <optional><attribute name="toc"><data type="IDREF"/></attribute></optional>
+        <optional><attribute name="processor"><data type="IDREF"/></attribute></optional>
+        <zeroOrMore>
+          <attribute>
+            <anyName>
+              <except>
+                <name ns="">id</name>
+                <name ns="">collection</name>
+                <name ns="">ref-id</name>
+                <name ns="">renderer</name>
+                <name ns="">name</name>
+                <name ns="">master</name>
+                <name ns="">item</name>
+                <name ns="">to</name>
+                <name ns="">toc</name>
+                <name ns="">processor</name>
+              </except>
+            </anyName>
+          </attribute>
+        </zeroOrMore>
+        <zeroOrMore>
+          <ref name="any_content"/>
+        </zeroOrMore>
+      </element>
     </choice>
   </define>
-  
+
   <define name="any_element">
     <element>
       <anyName><except><nsName ns="http://www.daisy.org/ns/2011/obfl"></nsName></except></anyName>
@@ -1805,5 +1833,4 @@
       </zeroOrMore>
     </element>
   </define>
-
 </grammar>
