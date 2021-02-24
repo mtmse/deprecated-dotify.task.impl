@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" 
+<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 	xmlns:xs="http://www.w3.org/2001/XMLSchema"
 	exclude-result-prefixes="xs obfl xtd"
 	xmlns:obfl="http://www.daisy.org/ns/2011/obfl"
@@ -44,13 +44,13 @@
 	<xsl:param name="l10nInstructionsHeading" select="'To the reader'"/>
 
 	<xsl:function name="obfl:insertLayoutMaster">
-		<xsl:param name="footnotesInFrontMatter" as="xs:integer"/> 
+		<xsl:param name="footnotesInFrontMatter" as="xs:integer"/>
 		<!-- count(//dtb:note[key('noterefs', @id)[ancestor::dtb:frontmatter]]) -->
 		<!-- count(//dtb:note[key('noterefs', @id)[ancestor::dtb:frontmatter]]) -->
 		<xsl:param name="footnotesNotInFrontMatter" as="xs:integer"/>
 		<!-- count(//dtb:note[key('noterefs', @id)[not(ancestor::dtb:frontmatter)]]) -->
 		<!-- count(//dtb:note[key('noterefs', @id)[not(ancestor::dtb:frontmatter)]]) -->
-		<layout-master name="front" page-width="{$page-width}" 
+		<layout-master name="front" page-width="{$page-width}"
 							page-height="{$page-height}" inner-margin="{$inner-margin}"
 							outer-margin="{$outer-margin}" row-spacing="{$row-spacing}" duplex="{$duplex}">
 			<xsl:if test="$duplex">
@@ -98,7 +98,7 @@
 				</page-area>
 			</xsl:if>
 		</layout-master>
-		<layout-master name="main" page-width="{$page-width}" 
+		<layout-master name="main" page-width="{$page-width}"
 							page-height="{$page-height}" inner-margin="{$inner-margin}"
 							outer-margin="{$outer-margin}" row-spacing="{$row-spacing}" duplex="{$duplex}">
 			<xsl:if test="$duplex">
@@ -171,7 +171,7 @@
 				</page-area>
 			</xsl:if>
 		</layout-master>
-		<layout-master name="plain" page-width="{$page-width}" 
+		<layout-master name="plain" page-width="{$page-width}"
 							page-height="{$page-height}" inner-margin="{$inner-margin}"
 							outer-margin="{$outer-margin}" row-spacing="{$row-spacing}" duplex="{$duplex}">
 			<xsl:if test="$duplex">
@@ -194,7 +194,7 @@
 				<xsl:call-template name="margin-region"/>
 			</default-template>
 		</layout-master>
-		<layout-master name="notes" page-width="{$page-width}" 
+		<layout-master name="notes" page-width="{$page-width}"
 							page-height="{$page-height}" inner-margin="{$inner-margin}"
 							outer-margin="{$outer-margin}" row-spacing="{$row-spacing}" duplex="{$duplex}">
 			<xsl:if test="$duplex">
@@ -230,7 +230,7 @@
 				<xsl:call-template name="margin-region"/>
 			</default-template>
 		</layout-master>
-		<layout-master name="cover" page-width="{$page-width}" 
+		<layout-master name="cover" page-width="{$page-width}"
 							page-height="{$page-height}" inner-margin="{$inner-margin}"
 							outer-margin="{$outer-margin}" row-spacing="1" duplex="{$duplex}" border-style="solid" border-width="1" border-align="outer">
 			<default-template>
@@ -239,7 +239,7 @@
 			</default-template>
 		</layout-master>
 	</xsl:function>
-	
+
 	<xsl:template name="margin-region">
 		<xsl:if test="$show-print-page-breaks">
 			<margin-region align="left" width="1">
@@ -249,18 +249,18 @@
 			</margin-region>
 		</xsl:if>
 	</xsl:template>
-	
+
 	<xsl:function name="obfl:insertVolumeTemplate">
 		<xsl:param name="title"/>
 		<xsl:param name="authors"/>
-		<xsl:param name="footnotesInFrontMatter" as="xs:integer"/> 
+		<xsl:param name="footnotesInFrontMatter" as="xs:integer"/>
 		<xsl:param name="footnotesNotInFrontMatter" as="xs:integer"/>
 		<xsl:param name="insertToc" as="xs:boolean"/>
 		<xsl:param name="additionalPreContent"/>
 		<xsl:param name="firstInFirstVolumeContent"/>
 		<xsl:choose>
 			<xsl:when test="$insertToc">
-				<volume-template volume-number-variable="volume" volume-count-variable="volumes" use-when="(= $volume 1)" sheets-in-volume-max="{$splitterMax}">
+				<volume-template use-when="(= $volume 1)" sheets-in-volume-max="{$splitterMax}">
 					<pre-content>
 						<xsl:if test="$show-cover-page">
 							<xsl:copy-of select="obfl:insertCoverPage($title, $authors)"/>
@@ -286,7 +286,7 @@
 						<xsl:copy-of select="obfl:insertPostContentNotes($footnotesInFrontMatter, $footnotesNotInFrontMatter)"/>
 					</post-content>
 				</volume-template>
-				<volume-template volume-number-variable="volume" volume-count-variable="volumes" use-when="(> $volume 1)" sheets-in-volume-max="{$splitterMax}">
+				<volume-template use-when="(> $volume 1)" sheets-in-volume-max="{$splitterMax}">
 					<pre-content>
 						<xsl:if test="$show-cover-page">
 							<xsl:copy-of select="obfl:insertCoverPage($title, $authors)"/>
@@ -329,7 +329,7 @@
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:function>
-	
+
 	<xsl:function name="obfl:insertVolumeTransition">
 		<xsl:param name="range"/>
 		<volume-transition range="{(('page', 'sheet')[.=$range], 'page')[1]}">
@@ -339,9 +339,9 @@
 			</sequence-interrupted>
 		</volume-transition>
 	</xsl:function>
-	
+
 	<xsl:function name="obfl:insertPostContentNotes">
-		<xsl:param name="footnotesInFrontMatter" as="xs:integer"/> 
+		<xsl:param name="footnotesInFrontMatter" as="xs:integer"/>
 		<!-- count(//dtb:note[key('noterefs', @id)[ancestor::dtb:frontmatter]]) -->
 		<!-- count(//dtb:note[key('noterefs', @id)[ancestor::dtb:frontmatter]]) -->
 		<xsl:param name="footnotesNotInFrontMatter" as="xs:integer"/>
@@ -381,7 +381,7 @@
 			</dynamic-sequence>
 		</xsl:if>
 	</xsl:function>
-	
+
 	<xsl:function name="obfl:insertCoverPage">
 		<xsl:param name="title"/>
 		<!-- /dtb:dtbook/dtb:book/dtb:frontmatter/dtb:doctitle -->
@@ -410,12 +410,12 @@
 				</xsl:otherwise>
 			</xsl:choose>
 			<block align="center" margin-left="2" margin-right="2" vertical-align="before" vertical-position="100%" hyphenate="false"><evaluate expression="
-				(if (&gt; $volumes 1) 
+				(if (&gt; $volumes 1)
 				(format &quot;{$l10nTocVolumeXofY}&quot; (int2text (round $volume) {$l10nLang}) (int2text (round $volumes) {$l10nLang}))
 				&quot;{$l10nTocOneVolume}&quot;)"/></block>
 		</sequence>
 	</xsl:function>
-	
+
 	<xsl:function name="obfl:insertProcessorRenderer">
 		<file-reference uri="split-table.xsl">
 			<xsl:copy-of select="document('split-table.xsl')"/>
@@ -437,7 +437,7 @@
 			</rendering-scenario>
 		</renderer>
 	</xsl:function>
-	
+
 	<xsl:function name="obfl:insertColophon">
 		<xsl:param name="node" required="yes"/>
 		<xsl:for-each select="$node">
@@ -450,7 +450,7 @@
 			</sequence>
 		</xsl:for-each>
 	</xsl:function>
-	
+
 	<xsl:function name="obfl:insertBackCoverTextAndRearJacketCopy">
 		<xsl:param name="node" required="yes"/>
 		<xsl:for-each select="$node">

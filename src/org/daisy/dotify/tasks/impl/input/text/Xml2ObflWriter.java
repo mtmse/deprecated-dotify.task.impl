@@ -12,7 +12,7 @@ abstract class Xml2ObflWriter {
 	private final InputStream is;
 	private final OutputStream os;
 	private final String encoding;
-	
+
 	private String rootLang;
 
 	Xml2ObflWriter(InputStream is, OutputStream os, String encoding) {
@@ -21,7 +21,7 @@ abstract class Xml2ObflWriter {
 		this.encoding = encoding;
 		this.rootLang = "";
 	}
-	
+
 	String getRootLang() {
 		return rootLang;
 	}
@@ -46,7 +46,7 @@ abstract class Xml2ObflWriter {
 				}
 				startPara(pw);
 				pw.print(line.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll("\"", "&quot;"));
-				if (line.length() == 0) {
+				if (line.isEmpty()) {
 					pw.print("&#x00A0;");
 				}
 				endPara(pw);
@@ -60,13 +60,13 @@ abstract class Xml2ObflWriter {
 			}
 		}
 	}
-	
+
 	protected abstract void writePrologue(PrintWriter pw);
 
 	protected abstract void writeEpilogue(PrintWriter pw);
-	
+
 	protected abstract void startPara(PrintWriter pw);
-	
+
 	protected abstract void endPara(PrintWriter pw);
 
 }
